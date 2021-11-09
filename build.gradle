@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'com.dropchop'
-version '1.0.3-SNAPSHOT'
+version '1.0.4-SNAPSHOT'
 sourceCompatibility = 11
 mainClassName = "com.dropchop.snakejar.Example"
 applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)

@@ -5,7 +5,7 @@
   <artifactId>snakejar</artifactId>
   <version>1.0.4-SNAPSHOT</version>
   <name>SnakeJar</name>
-  <url>https://www.dropchop.org/SnakeJar</url>
+  <url>https://github.com/ivlcic/snakejar</url>
 
   <properties>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -17,17 +17,40 @@
     <gradle.executable>./gradlew</gradle.executable>
   </properties>
 
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>ivlcic</id>
+      <name>Nikola Ivačič</name>
+      <email>nikola.ivacic@dropchop.com</email>
+    </developer>
+  </developers>
+
   <scm>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
-    <repository>
+    <!--<repository>
       <id>github</id>
       <name>GitHub OWNER Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/ivlcic/snakejar</url>
+    </repository>-->
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <dependencies>
