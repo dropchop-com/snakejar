@@ -16,12 +16,12 @@
     <version.slf4j>1.7.32</version.slf4j>
     <gradle.executable>./gradlew</gradle.executable>
   </properties>
-  
+
   <scm>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
-  
+
   <distributionManagement>
     <repository>
       <id>github</id>
@@ -44,7 +44,7 @@
       <version>${version.slf4j}</version>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <!-- copy all dependencies to target/dependencies -->
@@ -181,6 +181,15 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.3.1</version>
+        <configuration>
+          <additionalOptions>-Xdoclint:none</additionalOptions>
+          <additionalJOption>-Xdoclint:none</additionalJOption>
+        </configuration>
       </plugin>
     </plugins>
   </build>
