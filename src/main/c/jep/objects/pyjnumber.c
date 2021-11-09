@@ -1,0 +1,370 @@
+/*
+   jep - Java Embedded Python
+
+   Copyright (c) 2016-2021 JEP AUTHORS.
+
+   This file is licensed under the the zlib/libpng License.
+
+   This software is provided 'as-is', without any express or implied
+   warranty. In no event will the authors be held liable for any
+   damages arising from the use of this software.
+
+   Permission is granted to anyone to use this software for any
+   purpose, including commercial applications, and to alter it and
+   redistribute it freely, subject to the following restrictions:
+
+   1. The origin of this software must not be misrepresented; you
+   must not claim that you wrote the original software. If you use
+   this software in a product, an acknowledgment in the product
+   documentation would be appreciated but is not required.
+
+   2. Altered source versions must be plainly marked as such, and
+   must not be misrepresented as being the original software.
+
+   3. This notice may not be removed or altered from any source
+   distribution.
+*/
+
+
+#include "Jep.h"
+
+
+static PyObject* java_number_to_pythonintlong(JNIEnv *env, PyObject* n)
+{
+    jlong      value;
+    PyJObject *jnumber  = (PyJObject*) n;
+
+    value = java_lang_Number_longValue(env, jnumber->object);
+    if (process_java_exception(env)) {
+        return NULL;
+    }
+    return PyLong_FromLongLong(value);
+}
+
+
+static PyObject* java_number_to_pythonfloat(JNIEnv *env, PyObject* n)
+{
+    jdouble    value;
+    PyJObject *jnumber  = (PyJObject*) n;
+
+    value = java_lang_Number_doubleValue(env, jnumber->object);
+    if (process_java_exception(env)) {
+        return NULL;
+    }
+    return PyFloat_FromDouble(value);
+}
+
+
+static PyObject* java_number_to_python(JNIEnv *env, PyObject* n)
+{
+    PyJObject *jnumber  = (PyJObject*) n;
+
+    if ((*env)->IsInstanceOf(env, jnumber->object, JBYTE_OBJ_TYPE) ||
+            (*env)->IsInstanceOf(env, jnumber->object, JSHORT_OBJ_TYPE) ||
+            (*env)->IsInstanceOf(env, jnumber->object, JINT_OBJ_TYPE) ||
+            (*env)->IsInstanceOf(env, jnumber->object, JLONG_OBJ_TYPE)) {
+        return java_number_to_pythonintlong(env, n);
+    } else {
+        return java_number_to_pythonfloat(env, n);
+    }
+}
+
+#define TO_PYTHON_NUMBER(env, var)\
+    if (PyJNumber_Check(var)) {\
+        var = java_number_to_python(env, var);\
+        if (var == NULL){\
+            return NULL;\
+        }\
+    } else if (PyNumber_Check(var)) {\
+        Py_INCREF(var);\
+    }\
+    else {\
+        Py_INCREF(Py_NotImplemented);       \
+        return Py_NotImplemented;           \
+    }\
+
+#define CALL_UNARY(env, methodname, var)\
+    TO_PYTHON_NUMBER(env, var);\
+    result = methodname(var);\
+    Py_DECREF(var);\
+
+#define CALL_BINARY(env, methodname, var1, var2)\
+    TO_PYTHON_NUMBER(env, var1);\
+    TO_PYTHON_NUMBER(env, var2);\
+    result = methodname(var1, var2);\
+    Py_DECREF(var1);\
+    Py_DECREF(var2);\
+
+
+static PyObject* pyjnumber_add(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_Add, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_subtract(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_Subtract, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_multiply(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_Multiply, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_remainder(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_Remainder, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_divmod(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_Divmod, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_power(PyObject *x, PyObject *y, PyObject *z)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    TO_PYTHON_NUMBER(env, x);
+    TO_PYTHON_NUMBER(env, y);
+    if (z != Py_None) {
+        TO_PYTHON_NUMBER(env, z);
+    } else {
+        Py_INCREF(z);
+    }
+
+    result = PyNumber_Power(x, y, z);
+    Py_DECREF(x);
+    Py_DECREF(y);
+    Py_DECREF(z);
+    return result;
+}
+
+static PyObject* pyjnumber_negative(PyObject *x)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_UNARY(env, PyNumber_Negative, x);
+    return result;
+}
+
+static PyObject* pyjnumber_positive(PyObject *x)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_UNARY(env, PyNumber_Positive, x);
+    return result;
+}
+
+static PyObject* pyjnumber_absolute(PyObject *x)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_UNARY(env, PyNumber_Absolute, x);
+    return result;
+}
+
+static int pyjnumber_nonzero(PyObject *x)
+{
+    JNIEnv *env    = pyembed_get_env();
+    int     result = -1;
+
+    if (PyJNumber_Check(x)) {
+        x = java_number_to_python(env, x);
+        if (x == NULL) {
+            return result;
+        }
+    }
+
+    result = PyObject_IsTrue(x);
+    Py_DECREF(x);
+    return result;
+}
+
+static PyObject* pyjnumber_floordivide(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_FloorDivide, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_truedivide(PyObject *x, PyObject *y)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    CALL_BINARY(env, PyNumber_TrueDivide, x, y);
+    return result;
+}
+
+static PyObject* pyjnumber_index(PyObject *x)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+    TO_PYTHON_NUMBER(env, x);
+
+    if (PyLong_Check(x)) {
+        result = PyNumber_Index(x);
+        Py_DECREF(x);
+        return result;
+    }
+    else {
+        PyErr_Format(PyExc_TypeError, "list indices must be integers, not %s",
+                     Py_TYPE(x)->tp_name);
+        return NULL;
+    }
+}
+
+static PyObject* pyjnumber_int(PyObject *x)
+{
+    JNIEnv *env = pyembed_get_env();
+    return java_number_to_pythonintlong(env, x);
+}
+
+
+static PyObject* pyjnumber_float(PyObject *x)
+{
+    JNIEnv *env = pyembed_get_env();
+    return java_number_to_pythonfloat(env, x);
+}
+
+static PyObject* pyjnumber_richcompare(PyObject *self,
+                                       PyObject *other,
+                                       int opid)
+{
+    PyObject *result = NULL;
+    JNIEnv   *env    = pyembed_get_env();
+
+    TO_PYTHON_NUMBER(env, self);
+    TO_PYTHON_NUMBER(env, other);
+    result = PyObject_RichCompare(self, other, opid);
+    Py_DECREF(self);
+    Py_DECREF(other);
+    return result;
+}
+
+static Py_hash_t pyjnumber_hash(PyObject *self)
+{
+    JNIEnv   *env    = pyembed_get_env();
+    Py_hash_t result = -1;
+
+    if (PyJNumber_Check(self)) {
+        self = java_number_to_python(env, self);
+        if (self == NULL) {
+            return result;
+        }
+    }
+
+    result = PyObject_Hash(self);
+    Py_DECREF(self);
+    return result;
+}
+
+
+static PyNumberMethods pyjnumber_number_methods = {
+    (binaryfunc) pyjnumber_add,                 /* nb_add */
+    (binaryfunc) pyjnumber_subtract,            /* nb_subtract */
+    (binaryfunc) pyjnumber_multiply,            /* nb_multiply */
+    (binaryfunc) pyjnumber_remainder,           /* nb_remainder */
+    (binaryfunc) pyjnumber_divmod,              /* nb_divmod */
+    (ternaryfunc) pyjnumber_power,              /* nb_power */
+    (unaryfunc) pyjnumber_negative,             /* nb_neg */
+    (unaryfunc) pyjnumber_positive,             /* nb_pos */
+    (unaryfunc) pyjnumber_absolute,             /* nb_abs */
+    (inquiry) pyjnumber_nonzero,                /* nb_nonzero */
+    0,                                          /* nb_invert */
+    0,                                          /* nb_lshift */
+    0,                                          /* nb_rshift */
+    0,                                          /* nb_and */
+    0,                                          /* nb_xor */
+    0,                                          /* nb_or */
+    (unaryfunc) pyjnumber_int,                  /* nb_int */
+    0,                                          /* nb_reserved */
+    (unaryfunc) pyjnumber_float,                /* nb_float */
+    0,                                          /* inplace_add */
+    0,                                          /* inplace_subtract */
+    0,                                          /* inplace_multiply */
+    0,                                          /* inplace_remainder */
+    0,                                          /* inplace_power */
+    0,                                          /* inplace_lshift */
+    0,                                          /* inplace_rshift */
+    0,                                          /* inplace_and */
+    0,                                          /* inplace_xor */
+    0,                                          /* inplace_or */
+
+    (binaryfunc) pyjnumber_floordivide,         /* nb_floor_divide */
+    (binaryfunc) pyjnumber_truedivide,          /* nb_true_divide */
+    0,                                          /* nb_inplace_floor_divide */
+    0,                                          /* nb_inplace_true_divide */
+    (unaryfunc) pyjnumber_index,                /* nb_index */
+};
+
+/*
+ * Inherits from PyJObject_Type
+ */
+PyTypeObject PyJNumber_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "java.lang.Number",
+    sizeof(PyJObject),
+    0,
+    0,                                        /* tp_dealloc */
+    0,                                        /* tp_print */
+    0,                                        /* tp_getattr */
+    0,                                        /* tp_setattr */
+    0,                                        /* tp_compare */
+    0,                                        /* tp_repr */
+    &pyjnumber_number_methods,                /* tp_as_number */
+    0,                                        /* tp_as_sequence */
+    0,                                        /* tp_as_mapping */
+    pyjnumber_hash,                           /* tp_hash  */
+    0,                                        /* tp_call */
+    0,                                        /* tp_str */
+    0,                                        /* tp_getattro */
+    0,                                        /* tp_setattro */
+    0,                                        /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
+    "Jep java.lang.Number",                   /* tp_doc */
+    0,                                        /* tp_traverse */
+    0,                                        /* tp_clear */
+    pyjnumber_richcompare,                    /* tp_richcompare */
+    0,                                        /* tp_weaklistoffset */
+    0,                                        /* tp_iter */
+    0,                                        /* tp_iternext */
+    0,                                        /* tp_methods */
+    0,                                        /* tp_members */
+    0,                                        /* tp_getset */
+    0, // &PyJObject_Type                     /* tp_base */
+    0,                                        /* tp_dict */
+    0,                                        /* tp_descr_get */
+    0,                                        /* tp_descr_set */
+    0,                                        /* tp_dictoffset */
+    0,                                        /* tp_init */
+    0,                                        /* tp_alloc */
+    NULL,                                     /* tp_new */
+};

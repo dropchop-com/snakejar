@@ -1,0 +1,162 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'c'
+  id 'maven-publish'
+  id 'org.graalvm.buildtools.native' version "0.9.5" // or a newer version
+}
+
+group 'com.dropchop'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 11
+mainClassName = "com.dropchop.snakejar.Example"
+applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
+applicationDefaultJvmArgs.add("-Dsnakejar.log.level=error")
+applicationDefaultJvmArgs.add("-agentlib:native-image-agent=config-output-dir=./agent")
+
+repositories {
+  mavenCentral()
+  gradlePluginPortal()
+}
+
+dependencies {
+  implementation 'org.slf4j:slf4j-api:1.7.32'
+  implementation 'ch.qos.logback:logback-classic:1.2.6'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+  systemProperty "java.library.path", file("${buildDir}/libs/snakejar/shared").absolutePath
+  //systemProperty "snakejar.log.level", "debug"
+  testLogging.showStandardStreams = true
+  useJUnitPlatform()
+}
+
+jar {
+  from("${buildDir}/libs/snakejar/shared/") {
+    include 'lib*.so'
+    include 'lib*.dll'
+    include 'lib*.dynlib'
+  }
+}
+
+javadoc {
+  source = sourceSets.main.allJava
+  exclude 'com/dropchop/snakejar/embed/**'
+  exclude 'com/dropchop/snakejar/maybe/**'
+  options.addStringOption('Xdoclint:none', '-quiet')
+  dependsOn jar
+}
+
+tasks.register('javadocJar', Jar) {
+  archiveClassifier = 'javadoc'
+  from javadoc.destinationDir
+  dependsOn javadoc
+}
+
+tasks.register('sourcesJar', Jar) {
+  archiveClassifier = 'sources'
+  from sourceSets.main.allSource
+  dependsOn javadoc
+}
+
+graalvmNative.binaries.main {
+  imageName = "snakejar"
+  mainClass = "com.dropchop.snakejar.Example"
+  verbose = true
+  fallback = false
+  systemProperties = ["java.library.path": file("${buildDir}/libs/snakejar/shared").absolutePath]
+  runtimeArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
+  runtimeArgs.add("-Dsnakejar.log.level=error")
+  buildArgs.add('--allow-incomplete-classpath')
+  // build/native/nativeCompile/snakejar -Djava.library.path=build/libs/snakejar/shared -Dsnakejar.log.level=debug
+  // build/native/nativeCompile/snakejar -Dsnakejar.log.level=debug
+}
+
+def pyIncludeDir() {
+  def out = new ByteArrayOutputStream()
+  exec {
+    commandLine 'python', '-c', 'import sysconfig; print(sysconfig.get_paths()[\'include\'])', '2>&1'
+    standardOutput = out
+  }
+  return out.toString().trim()
+}
+
+def pySitePackagesDir() {
+	def out = new ByteArrayOutputStream()
+	exec {
+		commandLine 'python', '-c', 'import site; print(site.getsitepackages()[0])', '2>&1'
+		standardOutput = out
+	}
+	return out.toString().trim()
+}
+
+
+
+model {
+  platforms {
+    x64 {
+      architecture "x86_64"
+    }
+    x86 {
+      architecture "x86"
+    }
+  }
+
+  components {
+    snakejar(NativeLibrarySpec) {
+      // targetPlatform "x86"
+      // targetPlatform "x64"
+      sources {
+        c {
+          source {
+            srcDir "src/main/c"
+            include "**/*.c"
+          }
+          exportedHeaders {
+            srcDir "src/main/c/include"
+          }
+        }
+      }
+      binaries.all {
+        def pyIncludeDir = pyIncludeDir()
+        if (targetPlatform.operatingSystem.macOsX) {
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/darwin"
+		      cCompiler.args '-I', pyIncludeDir
+          cCompiler.args '-mmacosx-version-min=10.4'
+          linker.args '-mmacosx-version-min=10.4'
+          linker.args '-lpython3'
+          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.dynlib"
+        } else if (targetPlatform.operatingSystem.linux) {
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
+          cCompiler.args '-I', pyIncludeDir
+          cCompiler.args '-D_FILE_OFFSET_BITS=64'
+          cCompiler.args '-DJEP_NUMPY_ENABLED=0'
+          linker.args '-lpython3'
+          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.so"
+        } else if (targetPlatform.operatingSystem.windows) {
+          cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include/win32"
+		      cCompiler.args '-I', pyIncludeDir
+          linker.args "Shlwapi.lib", "Advapi32.lib"
+        } else if (targetPlatform.operatingSystem.freeBSD) {
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/freebsd"
+		      cCompiler.args '-I', pyIncludeDir
+          linker.args '-lpython3'
+          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-bsd-x64.so"
+        }
+      }
+    }
+  }
+}
+
+nativeRun.dependsOn 'snakejarSharedLibrary'
+jar.dependsOn 'snakejarSharedLibrary'
+run.dependsOn 'snakejarSharedLibrary'
+test.dependsOn 'snakejarSharedLibrary'
+assemble.dependsOn javadocJar
+assemble.dependsOn sourcesJar

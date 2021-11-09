@@ -1,0 +1,13 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+      },
+      {
+        "pattern": "\\Qlibsnakejar-linux-x64.so\\E"
+      }
+    ]
+  },
+  "bundles": []
+}

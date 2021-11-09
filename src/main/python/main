@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+PATH_TO_SCRIPT="$(realpath "$0")"
+SCRIPT_DIRECTORY="$(dirname "$PATH_TO_SCRIPT")"
+source "${SCRIPT_DIRECTORY}/../../../venv/bin/activate"
+python "${SCRIPT_DIRECTORY}/main.py" "$@"

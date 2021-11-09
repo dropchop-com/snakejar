@@ -1,0 +1,57 @@
+[
+{
+  "name":"com.dropchop.snakejar.impl.CompileInvoker", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.EmbeddedInterpreter", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.Invoker", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.LibraryLoader", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.SnakeJarBase", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.SnakeJarEmbedded", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.SnakeJarFactory", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.SnakeJarSubProcess", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.Thread", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.impl.ThreadFactory", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.io.FilePermission"
+},
+{
+  "name":"java.lang.RuntimePermission"
+},
+{
+  "name":"java.net.NetPermission"
+},
+{
+  "name":"java.net.SocketPermission"
+},
+{
+  "name":"java.net.URLPermission",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }]
+},
+{
+  "name":"java.security.AllPermission"
+},
+{
+  "name":"java.security.SecurityPermission"
+},
+{
+  "name":"java.util.PropertyPermission"
+}
+]

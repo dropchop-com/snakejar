@@ -1,0 +1,216 @@
+[
+{
+  "name":"boolean[]"
+},
+{
+  "name":"byte[]"
+},
+{
+  "name":"char[]"
+},
+{
+  "name":"com.dropchop.snakejar.embed.JepException", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"com.dropchop.snakejar.embed.Proxy"
+},
+{
+  "name":"com.dropchop.snakejar.embed.python.PyCallable"
+},
+{
+  "name":"com.dropchop.snakejar.embed.python.PyObject"
+},
+{
+  "name":"com.dropchop.snakejar.impl.EmbeddedInterpreter", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"double[]"
+},
+{
+  "name":"float[]"
+},
+{
+  "name":"int[]"
+},
+{
+  "name":"java.io.IOException"
+},
+{
+  "name":"java.lang.ArithmeticException"
+},
+{
+  "name":"java.lang.AssertionError"
+},
+{
+  "name":"java.lang.AutoCloseable"
+},
+{
+  "name":"java.lang.Boolean"
+},
+{
+  "name":"java.lang.Byte"
+},
+{
+  "name":"java.lang.Character"
+},
+{
+  "name":"java.lang.Class",
+  "methods":[{"name":"getComponentType","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.ClassCastException"
+},
+{
+  "name":"java.lang.ClassLoader",
+  "methods":[
+    {"name":"getPlatformClassLoader","parameterTypes":[] },
+    {"name":"loadClass","parameterTypes":["java.lang.String"] }
+  ]
+},
+{
+  "name":"java.lang.ClassNotFoundException"
+},
+{
+  "name":"java.lang.Comparable"
+},
+{
+  "name":"java.lang.Double",
+  "methods":[{"name":"<init>","parameterTypes":["double"] }]
+},
+{
+  "name":"java.lang.Float"
+},
+{
+  "name":"java.lang.IllegalArgumentException"
+},
+{
+  "name":"java.lang.IndexOutOfBoundsException"
+},
+{
+  "name":"java.lang.Integer"
+},
+{
+  "name":"java.lang.Iterable",
+  "methods":[{"name":"iterator","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Long"
+},
+{
+  "name":"java.lang.Number",
+  "methods":[{"name":"intValue","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Object"
+},
+{
+  "name":"java.lang.OutOfMemoryError"
+},
+{
+  "name":"java.lang.Short"
+},
+{
+  "name":"java.lang.String"
+},
+{
+  "name":"java.lang.Throwable"
+},
+{
+  "name":"java.lang.Thread", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.Void",
+  "fields":[{"name":"TYPE"}]
+},
+{
+  "name":"java.lang.reflect.Constructor"
+},
+{
+  "name":"java.lang.reflect.Field"
+},
+{
+  "name":"java.lang.reflect.Member"
+},
+{
+  "name":"java.lang.reflect.Method"
+},
+{
+  "name":"java.lang.reflect.Modifier"
+},
+{
+  "name":"java.lang.reflect.Proxy"
+},
+{
+  "name":"java.math.BigInteger"
+},
+{
+  "name":"java.nio.Buffer"
+},
+{
+  "name":"java.nio.ByteBuffer"
+},
+{
+  "name":"java.nio.ByteOrder"
+},
+{
+  "name":"java.nio.CharBuffer"
+},
+{
+  "name":"java.nio.DoubleBuffer"
+},
+{
+  "name":"java.nio.FloatBuffer"
+},
+{
+  "name":"java.nio.IntBuffer"
+},
+{
+  "name":"java.nio.LongBuffer"
+},
+{
+  "name":"java.nio.ShortBuffer"
+},
+{
+  "name":"java.util.ArrayList"
+},
+{
+  "name":"java.util.Collection"
+},
+{
+  "name":"java.util.Collections"
+},
+{
+  "name":"java.util.HashMap",
+  "methods":[{"name":"<init>","parameterTypes":["int"] }]
+},
+{
+  "name":"java.util.Iterator",
+  "methods":[{"name":"hasNext","parameterTypes":[] }]
+},
+{
+  "name":"java.util.List"
+},
+{
+  "name":"java.util.Map",
+  "methods":[
+    {"name":"entrySet","parameterTypes":[] },
+    {"name":"put","parameterTypes":["java.lang.Object","java.lang.Object"] }
+  ]
+},
+{
+  "name":"java.util.Map$Entry"
+},
+{
+  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader"
+},
+{
+  "name":"long[]"
+},
+{
+  "name":"org.graalvm.nativebridge.jni.JNIExceptionWrapperEntryPoints",
+  "methods":[{"name":"getClassName","parameterTypes":["java.lang.Class"] }]
+},
+{
+  "name":"short[]"
+}
+]
