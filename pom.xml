@@ -34,7 +34,7 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>snakejar-1.0.5</tag>
   </scm>
 
   <profiles>
