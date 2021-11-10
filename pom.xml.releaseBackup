@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.7-SNAPSHOT</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
 
@@ -34,17 +34,17 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
-    <tag>snakejar-1.0.5</tag>
+    <tag>snakejar-1.0.6</tag>
   </scm>
 
   <profiles>
     <profile>
       <id>github</id>
       <repositories>
-        <!--<repository>
+        <repository>
           <id>central</id>
           <url>https://repo1.maven.org/maven2</url>
-        </repository>-->
+        </repository>
         <repository>
           <id>github</id>
           <url>https://maven.pkg.github.com/ivlcic/snakejar</url>
@@ -94,6 +94,16 @@
           </snapshots>
         </repository>
       </repositories>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+      </distributionManagement>
       <build>
         <plugins>
           <plugin>
@@ -121,24 +131,6 @@
       </build>
     </profile>
   </profiles>
-
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub Ivlcic Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/ivlcic/snakejar</url>
-    </repository>
-    <!--
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-    -->
-  </distributionManagement>
 
   <dependencies>
     <dependency>
@@ -213,7 +205,7 @@
         <executions>
           <execution>
             <id>copy-gradle-so</id>
-            <phase>validate</phase>
+            <phase>package</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
