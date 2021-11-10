@@ -1,4 +1,3 @@
-import sys
 from class_lang_detect_model import LanguageDetectModel
 
 
@@ -113,6 +112,7 @@ class LanguageDetect:
         classification, confidence = fasttext_model.predict(text.replace("\n", " "), k=num_ret)
         result = {}
         for idx, val in enumerate(classification):
-            new_label = LanguageDetect.classification_language_map[classification[idx]]
+            new_label = \
+                LanguageDetect.classification_language_map[classification[idx]]
             result[new_label] = confidence[idx]
         return result

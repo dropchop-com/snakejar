@@ -1,4 +1,3 @@
-import sys
 import func_lang_detect_model
 
 __classification_language_map = {

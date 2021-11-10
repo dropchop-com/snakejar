@@ -6,7 +6,7 @@ in Java Application Servers, targeting Python Machine Learning frameworks and li
 
 Hence we stuffed some snakes in the jar.
 
-### Rationale
+## Rationale
 
 Why yet another Java Python bridge?
 Well, we tested quite a few options, sooner or latter reaching a dead end. 
@@ -31,7 +31,7 @@ it directly in some obscure environment combinations:
 We only use a subset of Jep [C code](https://github.com/ninia/jep/tree/master/src/main/c/Jep) 
 namely for marshalling function arguments and unmarshalling results from Java to Python and back.
 
-### Limitations
+## Limitations
 
 Of course, we also introduced numerous limitations, so we only support: 
 - single usage paradigm (contrary to Jep with much richer usage patterns),
@@ -51,7 +51,7 @@ other OSes and versions.
 In the future, we might support additional stuff, but don't count on it
 (since our main use is in Linux Containers).
 
-### Usage
+## Usage
 We support single usage pattern:
 - *Prepare* (single time)
   - Load (our library, detect and load Python Library, detect Python path)
@@ -72,7 +72,7 @@ the cycle might not work the second time.
 
 Here are some usage snippets:
 
-#### Minimal usage snippet
+### Minimal usage snippet
 
 Sample Python script *./path/to/actual/add.py*
 ```python
@@ -109,7 +109,7 @@ snakeJar.destroy();
 snakeJar.unload();
 ```
 
-#### Step by step
+### Step by step guide
 
 Prepare
 
@@ -208,8 +208,9 @@ snakeJar.destroy();
 // the library unloading:
 snakeJar.unload();
 ```
-#### Here is a more complete snippet:
+### Here is a more complete snippet:
 
+#### Java
 ```java
 class LangIdFunction extends InvokeFunction<HashMap<String, Double>> {
   @SuppressWarnings("unchecked")
@@ -275,8 +276,80 @@ HashMap<String, Double> classInvokeResult = myClassInvoker
 snakeJar.destroy();
 snakeJar.unload();
 ```
+#### Python
 
-### Development
+Script `src/python/func_lang_detect_model.py`
+```python
+import os
+import fasttext
+
+fasttext_model = None
+
+def get_model():
+    global fasttext_model
+    if not fasttext_model:
+        path = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), 
+                         'lid.176.ftz.wiki.fasttext'))
+        fasttext_model = fasttext.load_model(path)
+    return fasttext_model
+
+```
+
+Script `src/python/func_lang_detect.py`
+```python
+import func_lang_detect_model
+
+def lang_id(text: str, ret_num: int = 1):
+    fasttext_model = func_lang_detect_model.get_model()
+    classification, confidence = fasttext_model.predict(
+        text.replace("\n", " "), k=ret_num)
+    result = {}
+    for idx, val in enumerate(classification):
+        new_label = classification[idx]
+        result[new_label] = confidence[idx]
+    return result
+```
+And very similar class samples:
+
+Script `src/python/class_lang_detect_model.py`
+```python
+import os
+import fasttext
+
+class LanguageDetectModel:
+
+    fasttext_model = None
+
+    @staticmethod
+    def get_model():
+        if not LanguageDetectModel.fasttext_model:
+            path = os.path.normpath(os.path.join(
+                os.path.dirname(__file__), 'lid.176.ftz.wiki.fasttext'))
+            LanguageDetectModel.fasttext_model = fasttext.load_model(path)
+        return LanguageDetectModel.fasttext_model
+
+```
+
+Script `src/python/class_lang_detect.py`
+```python
+from class_lang_detect_model import LanguageDetectModel
+
+class LanguageDetect:
+    
+    @staticmethod
+    def lang_id(text: str, num_ret: int = 1):
+        fasttext_model = LanguageDetectModel.get_model()
+        classification, confidence = fasttext_model.predict(
+            text.replace("\n", " "), k=num_ret)
+        result = {}
+        for idx, val in enumerate(classification):
+            new_label = classification[idx]
+            result[new_label] = confidence[idx]
+        return result
+```
+
+## Development
 
 You need Linux with Python 3.9 installed. 
 
