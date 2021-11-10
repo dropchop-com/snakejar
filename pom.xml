@@ -212,7 +212,7 @@
         <executions>
           <execution>
             <id>copy-gradle-so</id>
-            <phase>test</phase>
+            <phase>prepare-package</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
