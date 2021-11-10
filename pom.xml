@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.6</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
 
@@ -34,7 +34,7 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
-    <tag>snakejar-1.0.5</tag>
+    <tag>snakejar-1.0.6</tag>
   </scm>
 
   <profiles>
