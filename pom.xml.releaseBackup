@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.8-SNAPSHOT</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
 
@@ -205,7 +205,7 @@
         <executions>
           <execution>
             <id>copy-gradle-so</id>
-            <phase>package</phase>
+            <phase>test</phase>
             <goals>
               <goal>copy-resources</goal>
             </goals>
