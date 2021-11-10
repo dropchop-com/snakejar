@@ -4,7 +4,7 @@ SnakeJar
 A Java library with embedded CPython which supports native image compile and usage 
 in Java Application Servers, targeting Python Machine Learning frameworks and libraries.
 
-Hence we stuffed some snakes in the jar.
+We stuffed some snakes in the jar, hence the name.
 
 ## Rationale
 
