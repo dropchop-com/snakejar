@@ -211,6 +211,23 @@ snakeJar.unload();
 #### Here is a more complete snippet:
 
 ```java
+class LangIdFunction extends InvokeFunction<HashMap<String, Double>> {
+  @SuppressWarnings("unchecked")
+  public LangIdFunction() {
+    super("func_lang_detect", "lang_id",
+      (Class<HashMap<String, Double>>)(Class<?>)HashMap.class);
+  }
+}
+
+class LangIdClassFunction extends InvokeClass<HashMap<String, Double>> {
+  @SuppressWarnings("unchecked")
+  public LangIdClassFunction() {
+    // Static function "lang_id" in "LanguageDetect" class
+    super("class_lang_detect", "lang_id", "LanguageDetect",
+      (Class<HashMap<String, Double>>)(Class<?>)HashMap.class);
+  }
+}
+
 SnakeJar snakeJar = SnakeJarFactory
   .get("com.dropchop.snakejar.impl.SnakeJarEmbedded")
   .load().initialize();
@@ -237,23 +254,18 @@ Invoker myClassInvoker = snakeJar.prep(
   )
 );
 
-@SuppressWarnings("unchecked")
 HashMap<String, Double> funcInvokeResult = myFuncInvoker
   .apply(
-    new InvokeFunction<>("func_lang_detect", "lang_id",
-      (Class<HashMap<String, Double>>)(Class<?>)HashMap.class) {},
+    new LangIdFunction(),
     () -> new Object[]{
       "Blah Blah.",
       3
     }
   ).get();
 
-@SuppressWarnings("unchecked")
 HashMap<String, Double> classInvokeResult = myClassInvoker
   .apply(
-    // Static function "lang_id" in "LanguageDetect" class
-    new InvokeClass<>("class_lang_detect", "lang_id", "LanguageDetect",
-      (Class<HashMap<String, Double>>)(Class<?>)HashMap.class) {},
+    new LangIdClassFunction(),
     () -> new Object[]{
       "Blah Blah.",
       3
