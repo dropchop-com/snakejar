@@ -6,8 +6,6 @@ plugins {
   id 'org.graalvm.buildtools.native' version "0.9.5" // or a newer version
 }
 
-group 'com.dropchop'
-version '1.0.5-SNAPSHOT'
 sourceCompatibility = 11
 mainClassName = "com.dropchop.snakejar.Example"
 applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
