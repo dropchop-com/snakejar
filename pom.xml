@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.11-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
 
@@ -34,7 +34,7 @@
 
   <scm>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
-    <tag>snakejar-1.0.6</tag>
+    <tag>snakejar-1.0.1</tag>
   </scm>
 
   <profiles>
@@ -90,6 +90,10 @@
       <id>maven-central</id>
       <repositories>
         <repository>
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
           <id>ossrh</id>
           <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
@@ -104,11 +108,11 @@
       <distributionManagement>
         <snapshotRepository>
           <id>ossrh</id>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+          <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
         <repository>
           <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+          <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
       </distributionManagement>
       <build>
