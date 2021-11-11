@@ -6,6 +6,8 @@
   <version>1.0.2-SNAPSHOT</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
+  <description>A Java library with embedded Python (CPython) which supports native image compile and usage
+    in Java Application Servers, targeting native Python Machine Learning frameworks and libraries.</description>
 
   <properties>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
