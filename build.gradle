@@ -10,6 +10,7 @@ sourceCompatibility = 11
 mainClassName = "com.dropchop.snakejar.Example"
 applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
 applicationDefaultJvmArgs.add("-Dsnakejar.log.level=error")
+applicationDefaultJvmArgs.add("-Dsnakejar.python.version=${python_version}")
 applicationDefaultJvmArgs.add("-agentlib:native-image-agent=config-output-dir=./agent")
 
 repositories {
@@ -26,13 +27,23 @@ dependencies {
 
 test {
   systemProperty "java.library.path", file("${buildDir}/libs/snakejar/shared").absolutePath
-  //systemProperty "snakejar.log.level", "debug"
+  systemProperty "snakejar.log.level", "debug"
+  systemProperty "snakejar.python.version", "${python_version}"
   testLogging.showStandardStreams = true
   useJUnitPlatform()
 }
 
-jar {
+task copyLibs(type: Copy) {
   from("${buildDir}/libs/snakejar/shared/") {
+    include 'lib*.so'
+    include 'lib*.dll'
+    include 'lib*.dynlib'
+  }
+  into "${buildDir}/prep"
+}
+
+jar {
+  from("${buildDir}/prep/") {
     include 'lib*.so'
     include 'lib*.dll'
     include 'lib*.dynlib'
@@ -67,6 +78,7 @@ graalvmNative.binaries.main {
   systemProperties = ["java.library.path": file("${buildDir}/libs/snakejar/shared").absolutePath]
   runtimeArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
   runtimeArgs.add("-Dsnakejar.log.level=error")
+  runtimeArgs.add("-Dsnakejar.python.version=${python_version}")
   buildArgs.add('--allow-incomplete-classpath')
   // build/native/nativeCompile/snakejar -Djava.library.path=build/libs/snakejar/shared -Dsnakejar.log.level=debug
   // build/native/nativeCompile/snakejar -Dsnakejar.log.level=debug
@@ -75,7 +87,7 @@ graalvmNative.binaries.main {
 def pyIncludeDir() {
   def out = new ByteArrayOutputStream()
   exec {
-    commandLine 'python', '-c', 'import sysconfig; print(sysconfig.get_paths()[\'include\'])', '2>&1'
+    commandLine "python${python_version}", '-c', 'import sysconfig; print(sysconfig.get_paths()[\'include\'])', '2>&1'
     standardOutput = out
   }
   return out.toString().trim()
@@ -84,13 +96,13 @@ def pyIncludeDir() {
 def pySitePackagesDir() {
 	def out = new ByteArrayOutputStream()
 	exec {
-		commandLine 'python', '-c', 'import site; print(site.getsitepackages()[0])', '2>&1'
+		commandLine "python${python_version}", '-c', 'import site; print(site.getsitepackages()[0])', '2>&1'
 		standardOutput = out
 	}
 	return out.toString().trim()
 }
 
-
+println org.gradle.internal.jvm.Jvm.current().javaHome
 
 model {
   platforms {
@@ -125,7 +137,7 @@ model {
 		      cCompiler.args '-I', pyIncludeDir
           cCompiler.args '-mmacosx-version-min=10.4'
           linker.args '-mmacosx-version-min=10.4'
-          linker.args '-lpython3'
+          linker.args "-lpython${python_version}"
           linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.dynlib"
         } else if (targetPlatform.operatingSystem.linux) {
           cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
@@ -133,8 +145,8 @@ model {
           cCompiler.args '-I', pyIncludeDir
           cCompiler.args '-D_FILE_OFFSET_BITS=64'
           cCompiler.args '-DJEP_NUMPY_ENABLED=0'
-          linker.args '-lpython3'
-          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.so"
+          linker.args "-lpython${python_version}"
+          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-py${python_version}-x64.so"
         } else if (targetPlatform.operatingSystem.windows) {
           cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
           cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include/win32"
@@ -144,7 +156,7 @@ model {
           cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
           cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/freebsd"
 		      cCompiler.args '-I', pyIncludeDir
-          linker.args '-lpython3'
+          linker.args "-lpython${python_version}"
           linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-bsd-x64.so"
         }
       }
@@ -153,7 +165,8 @@ model {
 }
 
 nativeRun.dependsOn 'snakejarSharedLibrary'
-jar.dependsOn 'snakejarSharedLibrary'
+copyLibs.dependsOn 'snakejarSharedLibrary'
+jar.dependsOn 'copyLibs'
 run.dependsOn 'snakejarSharedLibrary'
 test.dependsOn 'snakejarSharedLibrary'
 assemble.dependsOn javadocJar

@@ -144,11 +144,12 @@ public class EmbeddedInterpreter implements com.dropchop.snakejar.Interpreter {
               sourceString.trim().substring(12).replace("/", FileSystems.getDefault().getSeparator()))
           .normalize().toAbsolutePath().toString();
         }
-        LOG.trace("Will try to compile [{}][{}][{}]", moduleName, moduleName + ".py", sourceString);
+        LOG.trace("Will try to compile [{}][{}][{}]", moduleName, fileName, sourceString);
         try {
           this._compile(moduleName, fileName, sourceString);
+          LOG.info("Compiled module [{}] as [{}].", moduleName, fileName);
         } catch (Exception e) {
-          LOG.error("Unable to compile [{}][{}][{}]", moduleName, moduleName + ".py", sourceString, e);
+          LOG.error("Unable to compile [{}][{}][{}]", moduleName, fileName, sourceString, e);
           throw new IOException(e);
         }
       }

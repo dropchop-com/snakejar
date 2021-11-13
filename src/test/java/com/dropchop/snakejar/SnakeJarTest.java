@@ -1,6 +1,7 @@
 package com.dropchop.snakejar;
 
 import com.dropchop.snakejar.Invoker.Params;
+import com.dropchop.snakejar.impl.SnakeJarEmbedded;
 import com.dropchop.snakejar.impl.SnakeJarFactory;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;

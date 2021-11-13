@@ -16,7 +16,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <version.slf4j>1.7.32</version.slf4j>
-    <gradle.executable>./gradlew</gradle.executable>
+    <build.executable>./build.sh</build.executable>
   </properties>
 
   <licenses>
@@ -146,15 +146,13 @@
         <version>3.0.0</version>
         <executions>
           <execution>
-            <id>gradle</id>
+            <id>build</id>
             <phase>prepare-package</phase>
             <configuration>
-              <executable>${gradle.executable}</executable>
+              <executable>${build.executable}</executable>
               <arguments>
-                <argument>clean</argument>
-                <argument>build</argument>
-                <argument>-Pgroup=${project.groupId}</argument>
-                <argument>-Pversion=${project.version}</argument>
+                <argument>${project.groupId}</argument>
+                <argument>${project.version}</argument>
                 <argument>-S</argument>
               </arguments>
             </configuration>
@@ -171,7 +169,7 @@
         <version>3.2.0</version>
         <executions>
           <execution>
-            <id>copy-gradle-so</id>
+            <id>copy-libs</id>
             <phase>prepare-package</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -180,7 +178,7 @@
               <outputDirectory>${basedir}/target/classes</outputDirectory>
               <resources>
                 <resource>
-                  <directory>build/libs/snakejar/shared/</directory>
+                  <directory>build/prep/</directory>
                   <includes>
                     <include>lib*.so</include>
                   </includes>

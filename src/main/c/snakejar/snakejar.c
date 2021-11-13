@@ -76,7 +76,7 @@ static bool pre_init(JNIEnv *env) {
   return true;
 }
 
-JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initialize(JNIEnv *env, jobject) {
+JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initialize(JNIEnv *env, jobject obj) {
   PyThreadState *tstate;
   PyGILState_STATE gil;
   PyObject *module;
@@ -102,7 +102,7 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
   PyGILState_Release(gil);
 }
 
-JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1destroy(JNIEnv *env, jobject) {
+JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1destroy(JNIEnv *env, jobject obj) {
   PyGILState_STATE gil;
   PyThreadState *tstate;
 
