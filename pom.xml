@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
   <description>A Java library with embedded Python (CPython) which supports native image compile and usage
@@ -38,7 +38,7 @@
     <connection>scm:git:https://github.com/ivlcic/snakejar.git</connection>
     <developerConnection>scm:git:https://github.com/ivlcic/snakejar.git</developerConnection>
     <url>https://github.com/ivlcic/snakejar</url>
-    <tag>HEAD</tag>
+    <tag>snakejar-1.0.3</tag>
   </scm>
 
   <profiles>
