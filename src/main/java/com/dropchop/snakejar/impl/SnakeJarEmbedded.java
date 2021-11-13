@@ -111,7 +111,7 @@ public class SnakeJarEmbedded extends SnakeJarBase {
       LOG.warn("Unable to load library with message: {}!", e.getMessage());
       LOG.info("Will try to load from jar!");
       try {
-        File f = LibraryLoader.fromJarToTemp(LIB_NAME, "3.8", Thread.currentThread().getContextClassLoader());
+        File f = LibraryLoader.fromJarToTemp(LIB_NAME, pythonVersion, Thread.currentThread().getContextClassLoader());
         try {
           System.load(f.getAbsolutePath());
         } catch (UnsatisfiedLinkError ex) {
