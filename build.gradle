@@ -146,6 +146,7 @@ model {
           cCompiler.args '-D_FILE_OFFSET_BITS=64'
           cCompiler.args '-DJEP_NUMPY_ENABLED=0'
           linker.args "-lpython${python_version}"
+          linker.args "-rdynamic"
           linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-py${python_version}-x64.so"
         } else if (targetPlatform.operatingSystem.windows) {
           cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
