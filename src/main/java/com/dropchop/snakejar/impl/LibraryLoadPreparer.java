@@ -9,7 +9,7 @@ import java.nio.file.StandardCopyOption;
 /**
  * @author Nikola Ivačič <nikola.ivacic@dropchop.org> on 6. 11. 21.
  */
-public class LibraryLoader {
+public class LibraryLoadPreparer {
   private static final String OS = System.getProperty("os.name").toLowerCase();
   private static final String ARCH = System.getProperty("os.arch").toLowerCase();
 
@@ -73,6 +73,16 @@ public class LibraryLoader {
     return  "lib" + getLibraryBaseName(name, pythonVersion) + osExtension();
   }
 
+  static void fromJar(final File temp, final String fileName, final ClassLoader classLoader) throws IOException {
+    try (final InputStream is = classLoader.getResourceAsStream(fileName)) {
+      if (is == null) {
+        throw new RuntimeException("Missing [" + fileName + "] in jar.");
+      } else {
+        Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      }
+    }
+  }
+
   static File fromJarToTemp(final String baseName, final String pythonVersion, final ClassLoader classLoader) throws IOException {
     final File temp;
     temp = File.createTempFile("lib" + getLibraryBaseName(baseName, pythonVersion), osExtension());
@@ -83,14 +93,8 @@ public class LibraryLoader {
       temp.deleteOnExit();
     }
     String libFileName = "lib" + getLibraryBaseName(baseName, pythonVersion) + osExtension();
-    try (final InputStream is = classLoader.getResourceAsStream(libFileName)) {
-      if (is == null) {
-        throw new RuntimeException("Missing [" + libFileName + "] in jar.");
-      } else {
-        Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      }
-    }
 
+    fromJar(temp, libFileName, classLoader);
     return temp;
   }
 }

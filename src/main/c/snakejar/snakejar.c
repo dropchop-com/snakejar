@@ -24,8 +24,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
   if (!sj_jvm_get_sys_property("snakejar.pylib.location", buffer, buffer_len)) {
     sj_pread_line(SJ_PY_CMD_LIB_PATH, buffer, buffer_len);
+    sj_jlog_info(NULL, L"Loading Python library [%s] based on python command [%s]...", buffer, SJ_PY_CMD_LIB_PATH);
     sj_load_lib(buffer);
   } else {
+    sj_jlog_info(NULL, L"Loading Python library from system property [%s]...", buffer);
     sj_load_lib(buffer);
   }
   free(buffer);

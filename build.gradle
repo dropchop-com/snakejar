@@ -6,11 +6,34 @@ plugins {
   id 'org.graalvm.buildtools.native' version "0.9.5" // or a newer version
 }
 
+def pyVersionLibPath() {
+  def out = new ByteArrayOutputStream()
+  def resourcesDir = sourceSets.main.resources.srcDirs.first().absolutePath
+  def scriptFile = file("${resourcesDir}/pyverlib.py").absolutePath;
+  exec {
+    commandLine "python", scriptFile, '2>&1'
+    standardOutput = out
+  }
+  def ret = out.toString().trim()
+  def (python_version, python_lib_path) = ret.tokenize(';;')
+  def (major_num, minor_num, build_num) = python_version.trim().tokenize('.')
+
+  project.ext.python_version = major_num + "." + minor_num
+  project.ext.python_lib_path = python_lib_path
+  return ret
+}
+
+pyVersionLibPath()
+
+println "Python version: ${python_version}"
+println "Python lib path: ${python_lib_path}"
+println "Java Home: ${org.gradle.internal.jvm.Jvm.current().javaHome}"
+
+
 sourceCompatibility = 11
 mainClassName = "com.dropchop.snakejar.Example"
 applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
 applicationDefaultJvmArgs.add("-Dsnakejar.log.level=error")
-applicationDefaultJvmArgs.add("-Dsnakejar.python.version=${python_version}")
 applicationDefaultJvmArgs.add("-agentlib:native-image-agent=config-output-dir=./agent")
 
 repositories {
@@ -28,7 +51,6 @@ dependencies {
 test {
   systemProperty "java.library.path", file("${buildDir}/libs/snakejar/shared").absolutePath
   systemProperty "snakejar.log.level", "debug"
-  systemProperty "snakejar.python.version", "${python_version}"
   testLogging.showStandardStreams = true
   useJUnitPlatform()
 }
@@ -78,7 +100,6 @@ graalvmNative.binaries.main {
   systemProperties = ["java.library.path": file("${buildDir}/libs/snakejar/shared").absolutePath]
   runtimeArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
   runtimeArgs.add("-Dsnakejar.log.level=error")
-  runtimeArgs.add("-Dsnakejar.python.version=${python_version}")
   buildArgs.add('--allow-incomplete-classpath')
   // build/native/nativeCompile/snakejar -Djava.library.path=build/libs/snakejar/shared -Dsnakejar.log.level=debug
   // build/native/nativeCompile/snakejar -Dsnakejar.log.level=debug
@@ -101,8 +122,6 @@ def pySitePackagesDir() {
 	}
 	return out.toString().trim()
 }
-
-println org.gradle.internal.jvm.Jvm.current().javaHome
 
 model {
   platforms {

@@ -1,16 +1,12 @@
 #!/usr/bin/env sh
 
-PYTHON_VERSION="3.9"
+PYTHON_VERSION="${1}"
 
-for ARGUMENT in "$@"
-do
-    KEY=$(echo "${ARGUMENT}" | cut -f1 -d=)
-    VALUE=$(echo "${ARGUMENT}" | cut -f2 -d=)
-    case "$KEY" in
-            -Ppython_version) PYTHON_VERSION=${VALUE} ;;
-            *)
-    esac
-done
+if [ "$PYTHON_VERSION" != "3.9" ] && [ "$PYTHON_VERSION" != "3.8" ] ; then
+  echo "First argument should be python version 3.8 or 3.9."
+  exit 1
+fi
+shift;
 
 . "/build/venv-${PYTHON_VERSION}/bin/activate"
 echo "Activated virtual environment... /build/venv-${PYTHON_VERSION}"

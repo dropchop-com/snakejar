@@ -19,11 +19,29 @@ import java.util.regex.Pattern;
  */
 public class SnakeJarEmbedded extends SnakeJarBase {
 
+  public static class PythonEnvironment {
+    public final String version;
+    public final String libPath;
+
+    public PythonEnvironment(String version, String libPath) {
+      this.version = version;
+      this.libPath = libPath;
+    }
+  }
+
   private static final Logger LOG = LoggerFactory.getLogger(SnakeJarEmbedded.class);
+
+  private static final String PY_CMD = "python";
+  private static final String PY_CMD_RET_DELIM = ";;";
+  private static final String PY_CMD_SCRIPT_NAME = "pyverlib";
+  private static final String PY_CMD_SCRIPT_EXT = ".py";
+  private static final String PY_CMD_SCRIPT = PY_CMD_SCRIPT_NAME + PY_CMD_SCRIPT_EXT;
+
+  private static final Pattern PY_VER_PATT = Pattern.compile("[\\w]*([\\d]+\\.[\\d]+)");
+
   public static final String LIB_NAME = "snakejar";
   public static final String PY_VER_SYS_PROP = "snakejar.python.version";
-  private static final String PY_VER_CMD = "python --version";
-  private static final Pattern PY_VER_PATT = Pattern.compile("[\\w]*([\\d]+\\.[\\d]+)");
+  public static final String PY_LIB_SYS_PROP = "snakejar.pylib.location";
 
   /*
   protected static final ThreadLocal<Interpreter> interpreter = ThreadLocal.withInitial(() -> {
@@ -67,13 +85,19 @@ public class SnakeJarEmbedded extends SnakeJarBase {
     return new Invoker.Params(1, 1, 300L, TimeUnit.SECONDS);
   }
 
-  protected static String getPythonVersion(boolean forceFromProgram) {
+  protected static PythonEnvironment getPythonEnvironment(boolean forceFromProgram) {
     String pythonVersion = System.getProperty(PY_VER_SYS_PROP);
-    if (forceFromProgram || pythonVersion == null || pythonVersion.isEmpty()) {
+    String pythonLibPath = System.getProperty(PY_LIB_SYS_PROP);
+    if (forceFromProgram || pythonVersion == null || pythonVersion.isEmpty()
+        || pythonLibPath == null || pythonLibPath.isEmpty()) {
       StringBuilder result = new StringBuilder();
       try {
+        File temp = File.createTempFile(PY_CMD_SCRIPT_NAME, PY_CMD_SCRIPT_EXT);
+        LibraryLoadPreparer.fromJar(temp, PY_CMD_SCRIPT, Thread.currentThread().getContextClassLoader());
+
         String line;
-        Process p = Runtime.getRuntime().exec(PY_VER_CMD);
+        LOG.info("Running python environment detection [{}]", PY_CMD + " " + temp.getAbsolutePath());
+        Process p = Runtime.getRuntime().exec(new String[]{PY_CMD, temp.getAbsolutePath()});
         p.waitFor();
         if (p.exitValue() == 0) {
           BufferedReader bri = new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8));
@@ -81,37 +105,54 @@ public class SnakeJarEmbedded extends SnakeJarBase {
             result.append(line);
           }
         } else {
-          LOG.error("Got [{}] for [{}}] execution. Unable to detect python version and system property [{}] is also not given!",
-            p.exitValue(), PY_VER_CMD, PY_VER_SYS_PROP);
+          LOG.error("Got [{}] for [{}] execution. Unable to detect python version and system property [{}] is also not given!",
+            p.exitValue(), PY_CMD, PY_VER_SYS_PROP);
         }
 
       } catch (Exception err) {
         err.printStackTrace();
       }
-      Matcher matcher = PY_VER_PATT.matcher(result);
+      String resultStr = result.toString();
+      if (!resultStr.contains(PY_CMD_RET_DELIM)) {
+        LOG.error("Got invalid result [{}]. Unable to parse version and lib location!", result);
+        return null;
+      }
+      String[] results = resultStr.split(PY_CMD_RET_DELIM);
+      if (results.length != 2) {
+        LOG.error("Got invalid result [{}]. Unable to parse version and lib location!", result);
+        return null;
+      }
+      Matcher matcher = PY_VER_PATT.matcher(results[0]);// parse out just major.minor
       if (matcher.find() && matcher.groupCount() > 0) {
         pythonVersion = matcher.group(1);
       } else {
-        pythonVersion = result.toString();
+        pythonVersion = results[0];
       }
-
-      LOG.debug("Got python version [{}] from execution [{}] result [{}].", pythonVersion, PY_VER_CMD, result);
+      pythonLibPath = results[1];
+      LOG.debug("Got python version [{}] and lib path [{}] from execution [{}] result [{}].",
+        pythonVersion, pythonLibPath, PY_CMD, result);
+      System.setProperty(PY_LIB_SYS_PROP, pythonLibPath);
     } else {
-      LOG.debug("Got python version [{}] from execution [{}].", pythonVersion, PY_VER_CMD);
+      LOG.debug("Got python version [{}] and lib path [{}] from system propreties.",
+        pythonVersion, pythonLibPath);
     }
-    return pythonVersion;
+    return new PythonEnvironment(pythonVersion, pythonLibPath);
   }
 
   @Override
   protected void _load() {
-    String pythonVersion = getPythonVersion(false);
+    PythonEnvironment pythonEnvironment = getPythonEnvironment(false);
+    if (pythonEnvironment == null) {
+      throw new RuntimeException("Unable to detect Python runtime environment version and dynamic library path!");
+    }
     try {
-      System.loadLibrary(LibraryLoader.getLibraryBaseName(LIB_NAME, pythonVersion));
+      System.loadLibrary(LibraryLoadPreparer.getLibraryBaseName(LIB_NAME, pythonEnvironment.version));
     } catch (UnsatisfiedLinkError e) {
       LOG.warn("Unable to load library with message: {}!", e.getMessage());
       LOG.info("Will try to load from jar!");
       try {
-        File f = LibraryLoader.fromJarToTemp(LIB_NAME, pythonVersion, Thread.currentThread().getContextClassLoader());
+        File f = LibraryLoadPreparer.fromJarToTemp(LIB_NAME, pythonEnvironment.version,
+          Thread.currentThread().getContextClassLoader());
         try {
           System.load(f.getAbsolutePath());
         } catch (UnsatisfiedLinkError ex) {

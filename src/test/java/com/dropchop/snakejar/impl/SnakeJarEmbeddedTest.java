@@ -1,5 +1,6 @@
 package com.dropchop.snakejar.impl;
 
+import com.dropchop.snakejar.impl.SnakeJarEmbedded.PythonEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,10 +12,13 @@ class SnakeJarEmbeddedTest {
 
   @Test
   void getPythonVersion() {
-    String pythonVersion = SnakeJarEmbedded.getPythonVersion(true);
-    assertNotNull(pythonVersion);
+    PythonEnvironment pythonEnvironment = SnakeJarEmbedded.getPythonEnvironment(true);
+    assertNotNull(pythonEnvironment);
+    assertNotNull(pythonEnvironment.version);
     System.setProperty(SnakeJarEmbedded.PY_VER_SYS_PROP, "4.1");
-    pythonVersion = SnakeJarEmbedded.getPythonVersion(false);
-    assertEquals("4.1", pythonVersion);
+    System.setProperty(SnakeJarEmbedded.PY_LIB_SYS_PROP, "/usr/lib/libpython3.9.so");
+    pythonEnvironment = SnakeJarEmbedded.getPythonEnvironment(false);
+    assertEquals("4.1", pythonEnvironment.version);
+    assertEquals("/usr/lib/libpython3.9.so", pythonEnvironment.libPath);
   }
 }

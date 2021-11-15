@@ -5,6 +5,9 @@
         "pattern": "\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
       },
       {
+        "pattern": "\\Qpyverlib.py\\E"
+      },
+      {
         "pattern": "\\Qlibsnakejar-linux-py3.8-x64.so\\E"
       },
       {
