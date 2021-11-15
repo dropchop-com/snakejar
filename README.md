@@ -35,7 +35,7 @@ namely for marshalling function arguments and unmarshalling results from Java to
 
 Of course, we also introduced numerous limitations, so we only support: 
 - single usage paradigm (contrary to Jep with much richer usage patterns),
-- Python 3.9 (if you use compiled code),
+- Python 3.8 or 3.9 (if you use compiled code),
 - Linux
   
 Internal Python related notes:
@@ -49,7 +49,7 @@ Due to our lack of time (i.e. money for beer) we are currently unable to support
 other OSes and versions.
 
 In the future, we might support additional stuff, but don't count on it
-(since our main use is in Linux Containers).
+(since our main use is in Linux Containers with Quarkus).
 
 ## Usage
 We support single usage pattern:
@@ -73,6 +73,15 @@ the cycle might not work the second time.
 Here are some usage snippets:
 
 ### Minimal usage snippet
+
+Import from maven:
+```xml
+<dependency>
+  <groupId>com.dropchop</groupId>
+  <artifactId>snakejar</artifactId>
+  <version>1.0.5</version>
+</dependency>
+```
 
 Sample Python script *./path/to/actual/add.py*
 ```python
@@ -351,7 +360,7 @@ class LanguageDetect:
 
 ## Development
 
-You need Linux with Python 3.9 installed. 
+You need Linux with Python 3.9 or 3.8 installed. 
 
 Gradle wrapper script can be used for build, test and run.  
 Wrapper script has been modified so that it first creates Python virtual environment in *venv* folder.
