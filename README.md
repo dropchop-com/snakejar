@@ -79,7 +79,7 @@ Import from maven:
 <dependency>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
 </dependency>
 ```
 
@@ -363,11 +363,16 @@ class LanguageDetect:
 You need Linux with Python 3.10, 3.9 or 3.8 installed. 
 
 Gradle wrapper script can be used for build, test and run.  
-Wrapper script has been modified so that it first creates Python virtual environment in *venv* folder.
+First create Python virtual environment in *venv* folder.
+```
+python -m venv venv
+```
 
 So you should set it up for your terminal for later on:
 ```
 source venv/bin/activate
+# first run: python -m pip install --upgrade pip
+# first run: pip install -r requirements.txt
 ```
 Since we also support native image build, you must set up GraalVM as your JDK.
 

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.10-SNAPSHOT</version>
+  <version>1.0.7-SNAPSHOT</version>
   <name>SnakeJar</name>
   <url>https://github.com/ivlcic/snakejar</url>
   <description>A Java library with embedded Python (CPython) which supports native image compile and usage
@@ -15,7 +15,7 @@
     <project.scm.id>github</project.scm.id>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <version.slf4j>1.7.32</version.slf4j>
+    <version.slf4j>1.7.36</version.slf4j>
     <build.executable>./build.sh</build.executable>
   </properties>
 
