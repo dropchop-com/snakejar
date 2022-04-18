@@ -21,20 +21,6 @@
 ##  Gradle start up script for UN*X
 ##
 ##############################################################################
-SCRIPT=$(readlink -f ${0})
-# Directory of an absolute path to this script
-SCRIPTPATH=$(dirname $SCRIPT)
-if [ ! -d "${SCRIPTPATH}/venv" ]; then
-  echo "Generating virtual environment..."
-  python -m venv "${SCRIPTPATH}/venv"
-  echo "Generated virtual environment... ${SCRIPTPATH}/venv"
-  . "${SCRIPTPATH}/venv/bin/activate"
-  python -m pip install --upgrade pip
-  pip install -r requirements.txt
-fi
-. "${SCRIPTPATH}/venv/bin/activate"
-echo "Activated virtual environment... ${SCRIPTPATH}/venv"
-
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"
