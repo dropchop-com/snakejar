@@ -29,12 +29,34 @@ println "Python version: ${python_version}"
 println "Python lib path: ${python_lib_path}"
 println "Java Home: ${org.gradle.internal.jvm.Jvm.current().javaHome}"
 
-
-sourceCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 mainClassName = "com.dropchop.snakejar.Example"
 applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
 applicationDefaultJvmArgs.add("-Dsnakejar.log.level=error")
 applicationDefaultJvmArgs.add("-agentlib:native-image-agent=config-output-dir=./agent")
+
+allprojects {
+  tasks.withType(Test) {
+    systemProperty 'file.encoding', 'UTF-8'
+  }
+
+  tasks.withType(JavaExec) {
+    systemProperty 'file.encoding', 'UTF-8'
+  }
+}
+
+compileJava {
+  options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+}
+
+javadoc {
+  options.encoding = 'UTF-8'
+}
 
 repositories {
   mavenCentral()

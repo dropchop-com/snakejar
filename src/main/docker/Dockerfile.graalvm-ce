@@ -1,0 +1,56 @@
+FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-22
+
+RUN microdnf install openssl-devel zlib-devel bzip2-devel libffi-devel xz-devel nano tar
+RUN microdnf install automake binutils bison flex gcc gcc-c++ gdb glibc-devel libtool \
+  make pkgconf pkgconf-m4 pkgconf-pkg-config redhat-rpm-config rpm-build rpm-sign strace \
+  asciidoc byacc ctags diffstat git intltool ltrace patchutils perl-Fedora-VSP perl-generators \
+  pesign source-highlight systemtap valgrind cmake expect rpmdevtools rpmlint
+RUN microdnf install libuv
+
+RUN microdnf module enable python38 \
+  && microdnf install python38-pip \
+  && microdnf install python38-devel \
+  && microdnf install python38-wheel \
+  && microdnf module enable python39 \
+  && microdnf install python39-pip \
+  && microdnf install python39-devel \
+  && microdnf install python39-wheel \
+  && microdnf clean all
+
+RUN microdnf install wget
+
+RUN wget https://www.python.org/ftp/python/3.10.3/Python-3.10.3.tgz \
+   && tar xvf Python-3.10.3.tgz && cd Python-3.10*/ \
+   && ./configure \
+        --prefix=/usr \
+        --enable-shared \
+        --enable-optimizations \
+        --with-computed-gotos \
+        --with-system-ffi \
+        --enable-loadable-sqlite-extensions \
+   && make altinstall
+
+#RUN microdnf remove urw-base35-fonts-common nspr nss-util boost-system emacs-filesystem libjpeg-turbo libICE xz unzip m4 libcroco cracklib cracklib-dicts gettext-libs libpwquality pam zip libSM boost-chrono vim-filesystem python-srpm-macros cmake-filesystem atk adobe-mappings-cmap xml-common patch libtool-ltdl groff-base elfutils-default-yama-scope elfutils-libs elfutils-debuginfod-client efivar-libs diffutils cpio bzip2 mokutil elfutils libbabeltrace adobe-mappings-cmap-deprecated python-rpm-macros python3-rpm-macros boost-timer gettext cmake-rpm-macros crypto-policies-scripts jasper-libs desktop-file-utils libidn boost-filesystem boost-thread nss-softokn-freebl nss-softokn nss-sysinit nss nss-tools zstd tbb rust-srpm-macros qt5-srpm-macros pixman perl-srpm-macros openjpeg2 openblas-srpm-macros ocaml-srpm-macros libwebp libuv cmake cmake-data libpaper libmcpp mcpp libipt libijs libfontenc xorg-x11-font-utils xorg-x11-fonts-ISO8859-1-100dpi libdatrie libthai libatomic_ops gc guile gdb-headless libXau libxcb libX11-common libX11 libXext libXrender cairo libXt libXmu libXfixes libXpm libXcursor libXrandr libXi libXinerama libXaw libXdamage libXft libXxf86misc libXxf86vm xorg-x11-server-utils urw-base35-bookman-fonts urw-base35-c059-fonts urw-base35-d050000l-fonts urw-base35-gothic-fonts urw-base35-nimbus-mono-ps-fonts urw-base35-nimbus-roman-fonts urw-base35-nimbus-sans-fonts urw-base35-p052-fonts urw-base35-standard-symbols-ps-fonts urw-base35-z003-fonts urw-base35-fonts libXcomposite lcms2 jbigkit-libs libtiff gd jbig2dec-libs hicolor-icon-theme graphite2 harfbuzz google-droid-sans-fonts go-srpm-macros ghc-srpm-macros fribidi pango efi-srpm-macros dwz ctags boost-date-time boost-atomic dyninst systemtap-runtime annobin redhat-rpm-config adobe-mappings-pdf tpm2-tss ima-evm-utils rpm-build-libs python3-rpm rpm-build tcl shared-mime-info gdk-pixbuf2 gdk-pixbuf2-modules gtk-update-icon-cache librsvg2 sgml-common docbook-dtds docbook-style-xsl ncurses perl-Digest perl-Digest-MD5 perl-Data-Dumper perl-libnet perl-Net-SSLeay perl-URI perl-Pod-Escapes perl-Time-Local perl-IO-Socket-IP perl-IO-Socket-SSL perl-Term-ANSIColor perl-Term-Cap perl-File-Temp perl-Pod-Simple perl-HTTP-Tiny perl-podlators perl-Pod-Perldoc perl-Text-ParseWords perl-Pod-Usage perl-MIME-Base64 perl-Storable perl-Getopt-Long perl-Errno perl-Socket perl-Encode perl-Carp perl-Exporter perl-libs perl-Scalar-List-Utils perl-parent perl-macros perl-Text-Tabs+Wrap perl-Unicode-Normalize perl-File-Path perl-IO perl-PathTools perl-constant perl-threads perl-threads-shared perl-interpreter perl-Compress-Raw-Zlib autoconf perl-Encode-Locale perl-Compress-Raw-Bzip2 perl-IO-Compress perl-Net-HTTP perl-Data-Dump perl-Digest-SHA perl-Digest-HMAC perl-NTLM perl-Error perl-HTML-Tagset perl-TermReadKey perl-TimeDate perl-HTTP-Date perl-File-Listing perl-WWW-RobotRules perl-Thread-Queue automake perl-Try-Tiny perl-Fedora-VSP perl-IO-HTML mailcap perl-LWP-MediaTypes perl-HTTP-Message perl-HTML-Parser perl-HTTP-Cookies perl-HTTP-Negotiate perl-libwww-perl perl-XML-Parser libzstd-devel libxslt libutempter libicu boost-regex source-highlight libfdisk util-linux openssh libedit openssh-clients git-core git-core-doc perl-Git git gettext-common-devel gettext-devel elfutils-libelf-devel elfutils-devel dbus-libs avahi-libs cups-libs gtk2 libgs graphviz systemtap-client systemtap-devel systemtap asciidoc intltool perl-generators libtool patchutils rpmdevtools rpmlint valgrind expect rpm-sign gdb pesign strace ltrace bison flex diffstat byacc
+
+#RUN microdnf remove automake intltool libtool bison flex make cmake cmake-data systemtap systemtap-devel \
+#  pesign source-highlight valgrind cmake expect rpmdevtools rpmlint asciidoc redhat-rpm-config rpm-build rpm-sign strace \
+#  bzip2-devel rpmdevtools elfutils-devel elfutils-libelf-devel libcom_err-devel libcurl-devel libffi-devel \
+#  libselinux-devel libsepol-devel libverto-devel libxcrypt-devel libzstd-devel openssl-devel krb5-devel \
+#  ncurses-devel pcre2-devel python38-devel python39-devel readline-devel xz-devel zlib-devel zlib-static \
+#  libxcrypt-static glibc-static glibc-devel gcc gcc-c++ annobin gcc-gfortran libquadmath-devel \
+#  byacc ctags diffstat git intltool ltrace patchutils perl-Fedora-VSP perl-generators perl-Git
+
+#RUN microdnf remove \
+#    urw-base35-bookman-fonts-20170801-10 urw-base35-bookman-fonts-20170801-10 urw-base35-c059-fonts-20170801-10 \
+#    urw-base35-d050000l-fonts-20170801-10 urw-base35-gothic-fonts-20170801-10 urw-base35-nimbus-mono-ps-fonts-20170801-10 \
+#    pkgconf-pkg-config pkgconf pkgconf-m4 xorg-x11-font-utils
+
+RUN ln -s /usr/lib64/python3.10/lib-dynload/ /usr/lib/python3.10/lib-dynload
+
+#docker build . -f Dockerfile.ol8-py \
+# -t registry.gitlab.com/dropchop/cosmos/graalvm-ce:ol8-java17-22-py38 \
+# -t registry.gitlab.com/dropchop/cosmos/graalvm-ce:ol8-java17-22-py39 \
+# -t registry.gitlab.com/dropchop/cosmos/graalvm-ce:ol8-java17-22-py310 \
+# -t registry.gitlab.com/dropchop/cosmos/graalvm-ce:latest
+#docker login -u ivlcic registry.gitlab.com
+#docker push registry.gitlab.com/dropchop/cosmos/graalvm-ce:latest

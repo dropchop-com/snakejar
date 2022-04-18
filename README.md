@@ -35,7 +35,7 @@ namely for marshalling function arguments and unmarshalling results from Java to
 
 Of course, we also introduced numerous limitations, so we only support: 
 - single usage paradigm (contrary to Jep with much richer usage patterns),
-- Python 3.8 or 3.9 (if you use compiled code),
+- Python 3.8, 3.9 or 3.10 (if you use compiled code),
 - Linux
   
 Internal Python related notes:
@@ -79,7 +79,7 @@ Import from maven:
 <dependency>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.7</version>
 </dependency>
 ```
 
@@ -360,7 +360,7 @@ class LanguageDetect:
 
 ## Development
 
-You need Linux with Python 3.9 or 3.8 installed. 
+You need Linux with Python 3.10, 3.9 or 3.8 installed. 
 
 Gradle wrapper script can be used for build, test and run.  
 Wrapper script has been modified so that it first creates Python virtual environment in *venv* folder.
@@ -372,7 +372,7 @@ source venv/bin/activate
 Since we also support native image build, you must set up GraalVM as your JDK.
 
 ```
-export JAVA_HOME=/usr/lib/jvm/java-11-graalvm
+export JAVA_HOME=/usr/lib/jvm/java-17-graalvm
 ```
 If you want to use other Java w/o native image build support, comment out  
 `applicationDefaultJvmArgs.add("-agentlib:native-image-agent=config-output-dir=./agent")`
