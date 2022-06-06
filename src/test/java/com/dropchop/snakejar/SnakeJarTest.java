@@ -1,7 +1,5 @@
 package com.dropchop.snakejar;
 
-import com.dropchop.snakejar.Invoker.Params;
-import com.dropchop.snakejar.impl.SnakeJarEmbedded;
 import com.dropchop.snakejar.impl.SnakeJarFactory;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -73,8 +71,8 @@ class SnakeJarTest {
     int numCalls = 5;
 
     List<Source<?>> list = new ArrayList<>();
-    list.addAll(Example.FUNC_SOURCES);
-    list.addAll(Example.CLASS_SOURCES);
+    list.addAll(Example.LANG_ID_FUNC_SOURCES);
+    list.addAll(Example.LANG_ID_CLASS_SOURCES);
     Invoker invoker = snakeJar.prep(
       list
     );

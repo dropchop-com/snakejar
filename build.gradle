@@ -1,3 +1,5 @@
+import org.gradle.internal.jvm.Jvm
+
 plugins {
   id 'java'
   id 'application'
@@ -25,16 +27,17 @@ def pyVersionLibPath() {
 
 pyVersionLibPath()
 
-println "Python version: ${python_version}"
-println "Python lib path: ${python_lib_path}"
-println "Java Home: ${org.gradle.internal.jvm.Jvm.current().javaHome}"
-
 sourceCompatibility = 17
 targetCompatibility = 17
 mainClassName = "com.dropchop.snakejar.Example"
 applicationDefaultJvmArgs.add("-Djava.library.path=" + file("${buildDir}/libs/snakejar/shared").absolutePath)
 applicationDefaultJvmArgs.add("-Dsnakejar.log.level=error")
 applicationDefaultJvmArgs.add("-agentlib:native-image-agent=config-output-dir=./agent")
+
+println "Java Library Path: ${System.properties.get('java.library.path')}"
+println "Python version: ${python_version}"
+println "Python Library Path: ${python_lib_path}"
+println "Java Home: ${Jvm.current().javaHome}"
 
 allprojects {
   tasks.withType(Test) {
@@ -65,7 +68,7 @@ repositories {
 
 dependencies {
   implementation 'org.slf4j:slf4j-api:1.7.32'
-  implementation 'ch.qos.logback:logback-classic:1.2.6'
+  implementation 'ch.qos.logback:logback-classic:1.2.9'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 }
@@ -136,6 +139,7 @@ def pyIncludeDir() {
   return out.toString().trim()
 }
 
+@SuppressWarnings('unused')
 def pySitePackagesDir() {
 	def out = new ByteArrayOutputStream()
 	exec {
@@ -173,16 +177,16 @@ model {
       binaries.all {
         def pyIncludeDir = pyIncludeDir()
         if (targetPlatform.operatingSystem.macOsX) {
-          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
-          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/darwin"
+          cCompiler.args '-I', "${Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${Jvm.current().javaHome}/include/darwin"
 		      cCompiler.args '-I', pyIncludeDir
           cCompiler.args '-mmacosx-version-min=10.4'
           linker.args '-mmacosx-version-min=10.4'
           linker.args "-lpython${python_version}"
           linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.dynlib"
         } else if (targetPlatform.operatingSystem.linux) {
-          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
-          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
+          cCompiler.args '-I', "${Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${Jvm.current().javaHome}/include/linux"
           cCompiler.args '-I', pyIncludeDir
           cCompiler.args '-D_FILE_OFFSET_BITS=64'
           cCompiler.args '-DJEP_NUMPY_ENABLED=0'
@@ -190,13 +194,13 @@ model {
           linker.args "-rdynamic"
           linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-py${python_version}-x64.so"
         } else if (targetPlatform.operatingSystem.windows) {
-          cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
-          cCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include/win32"
+          cCompiler.args "-I${Jvm.current().javaHome}/include"
+          cCompiler.args "-I${Jvm.current().javaHome}/include/win32"
 		      cCompiler.args '-I', pyIncludeDir
           linker.args "Shlwapi.lib", "Advapi32.lib"
         } else if (targetPlatform.operatingSystem.freeBSD) {
-          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
-          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/freebsd"
+          cCompiler.args '-I', "${Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${Jvm.current().javaHome}/include/freebsd"
 		      cCompiler.args '-I', pyIncludeDir
           linker.args "-lpython${python_version}"
           linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-bsd-x64.so"

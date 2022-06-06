@@ -1,5 +1,6 @@
 #include "Jep.h"
 #include "sj_utils.h"
+#include "sj_invoke.h"
 
 #ifndef _Included_sj_interpreter
 #define _Included_sj_interpreter

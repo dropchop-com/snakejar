@@ -153,7 +153,7 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
       sj_throw_error(env, err_msg);
     } else {
       sj_jlog_debug(env, L"Found function [%s][%p].", f_name ? f_name : "NULL", callable);
-      ret = pyembed_invoke_as(env, callable, args, kwargs, ret_type);
+      ret = sj_invoke_as(env, callable, args, kwargs, ret_type);
       if (PyErr_Occurred()) {
         process_py_exception(env);
       } else {
@@ -220,7 +220,7 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
         } else {
           sj_jlog_debug(env, L"Found class [%s][%p] function [%s][%p].",
                                c_name ? c_name : "NULL", callable_cls, f_name ? f_name : "NULL", callable);
-          ret = pyembed_invoke_as(env, callable, args, kwargs, ret_type);
+          ret = sj_invoke_as(env, callable, args, kwargs, ret_type);
           if (PyErr_Occurred()) {
             process_py_exception(env);
           } else {

@@ -1,8 +1,8 @@
-import distutils.sysconfig as du_sysconfig
 import itertools
 import os
 import sys
 import sysconfig
+
 
 def get_python_version():
     """Get version associated with the current python interpreter."""
@@ -15,6 +15,7 @@ def get_python_version():
         python_version = ".".join(map(str, sys.version_info[:2]))
 
     return python_version
+
 
 def get_python_library(python_version):
     """Get path to the python library associated with the current python
@@ -43,12 +44,7 @@ def get_python_library(python_version):
         if abiflags:
             candidate_abiflags.append('')
 
-        # Ensure the value injected by virtualenv is
-        # returned on windows.
-        # Because calling `sysconfig.get_config_var('multiarchsubdir')`
-        # returns an empty string on Linux, `du_sysconfig` is only used to
-        # get the value of `LIBDIR`.
-        libdir = du_sysconfig.get_config_var('LIBDIR')
+        libdir = sysconfig.get_config_var('LIBDIR')
         if sysconfig.get_config_var('MULTIARCH'):
             masd = sysconfig.get_config_var('multiarchsubdir')
             if masd:
@@ -84,6 +80,7 @@ def get_python_library(python_version):
     # TODO(opadron): what happens if we don't find a libpython?
 
     return python_library
+
 
 python_version = get_python_version()
 python_library = get_python_library(python_version)
