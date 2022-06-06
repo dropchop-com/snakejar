@@ -78,6 +78,15 @@ public class Example {
 
   public static final Invocation<List<Map<String, Object>>> PARAMS_LIST_HASHMAP_FUNC = new InvokeListHashMapFunc();
 
+  public static class InvokeListHashMapFuncNoCopy extends InvokeFunction<List<Map<String, Object>>> {
+    @SuppressWarnings("unchecked")
+    public InvokeListHashMapFuncNoCopy() {
+      super("func_test_params", "params_list_hashmap_nocopy", (Class<List<Map<String, Object>>>)(Class<?>)ArrayList.class);
+    }
+  }
+
+  public static final Invocation<List<Map<String, Object>>> PARAMS_LIST_HASHMAP_FUNC_NO_COPY = new InvokeListHashMapFunc();
+
 
   public static void exec(List<Future<HashMap<String, Double>>> futures, int numCalls) {
     long time = System.currentTimeMillis();
@@ -124,17 +133,13 @@ public class Example {
     execSimpleParams(paramsInvoker, PARAMS_LIST_FUNC, strings, numCalls);
   }
 
-  public static void execParamsListHashMap(Invoker paramsInvoker, int numCalls) {
+  public static void execParams(Invoker paramsInvoker, Invocation<List<Map<String, Object>>> invocation, Object params, int numCalls) {
     long time = System.currentTimeMillis();
-    List<Map<String, Object>> docs = List.of(
-      Map.of("title", "test title1", "body", "test body1", "embed", List.of(1.2, 1.3, 1.4, 1.5, 1.6)),
-      Map.of("title", "test title2", "body", "test body2", "embed", List.of(1.2, 1.3, 1.4, 1.5, 1.6))
-    );
     Collection<Future<List<Map<String, Object>>>> futures = new ArrayList<>();
     for (int i = 0; i < numCalls; i++) {
       futures.add(
-        paramsInvoker.apply(PARAMS_LIST_HASHMAP_FUNC, () ->
-          new Object[]{"sl", docs}
+        paramsInvoker.apply(invocation, () ->
+          new Object[]{"sl", params}
         ));
     }
     for (Future<List<Map<String, Object>>> future : futures) {
@@ -147,6 +152,22 @@ public class Example {
       }
     }
     LOG.info("Done [{}] calls in [{}]ms", numCalls, System.currentTimeMillis() - time);
+  }
+
+  public static void execParamsListHashMap(Invoker paramsInvoker, int numCalls) {
+    List<Map<String, Object>> docs = List.of(
+      Map.of("title", "test title1", "body", "test body1", "embed", List.of(1.2, 1.3, 1.4, 1.5, 1.6)),
+      Map.of("title", "test title2", "body", "test body2", "embed", List.of(1.2, 1.3, 1.4, 1.5, 1.6))
+    );
+    execParams(paramsInvoker, PARAMS_LIST_HASHMAP_FUNC, docs, numCalls);
+  }
+
+  public static void execParamsListHashMapNoCopy(Invoker paramsInvoker, int numCalls) {
+    List<Map<String, Object>> docs = List.of(
+      Map.of("title", "test title1", "body", "test body1", "embed", List.of(1.2, 1.3, 1.4, 1.5, 1.6)),
+      Map.of("title", "test title2", "body", "test body2", "embed", List.of(1.2, 1.3, 1.4, 1.5, 1.6))
+    );
+    execParams(paramsInvoker, PARAMS_LIST_HASHMAP_FUNC_NO_COPY, docs, numCalls);
   }
 
   public static void main(String[] args) throws Exception {
@@ -181,6 +202,7 @@ public class Example {
     execParamsHashMap(paramsInvoker, numCalls);
     execParamsList(paramsInvoker, numCalls);
     execParamsListHashMap(paramsInvoker, numCalls);
+    execParamsListHashMapNoCopy(paramsInvoker, numCalls);
 
     snakeJar.destroy();
     snakeJar.unload();

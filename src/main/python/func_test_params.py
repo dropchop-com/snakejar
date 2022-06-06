@@ -27,3 +27,13 @@ def params_list_hashmap(lang: str, docs: List[Dict[str, Any]]):
         results.append(result)
 
     return results
+
+
+def params_list_hashmap_nocopy(lang: str, docs: List[Dict[str, Any]]):
+    for idx, doc in enumerate(docs):
+        doc['lang'] = lang
+        doc['embed2'] = [3.1, 3.2, 3.3, 3.4, 3.12324324]
+        for idx2, num in enumerate(doc['embed']):
+            doc['embed'][idx2] = num * idx2
+
+    return docs
