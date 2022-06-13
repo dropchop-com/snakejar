@@ -207,10 +207,6 @@
   "name":"long[]"
 },
 {
-  "name":"org.graalvm.nativebridge.jni.JNIExceptionWrapperEntryPoints",
-  "methods":[{"name":"getClassName","parameterTypes":["java.lang.Class"] }]
-},
-{
   "name":"short[]"
 }
 ]
