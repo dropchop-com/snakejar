@@ -41,15 +41,15 @@ public class LibraryLoadPreparer {
   public static String osArchSuffix(final String name, final String pythonVersion) {
     if (isUnix()) {
       return String.format("%s-linux-py%s-%s", name, pythonVersion, is64Bit() ? "x64" : "");
+    } else if (isWindows() && is64Bit()) {
+      return String.format("%s-win-py%s-%s", name, pythonVersion, is64Bit() ? "x64" : "");
     } /*else if (isMac()) {
       return String.format("%s-osx-py%s", name, pythonVersion);
     } else if (isFreeBSD()) {
       return String.format("%s-freebsd%s", name, is64Bit() ? "x64" : "");
-    } else if (isWindows() && is64Bit()) {
-      return String.format("%s-win64", name);
     } else if (isOpenBSD()) {
       return String.format("%s-openbsd%s", name, is64Bit() ? "x64" : "");
-    } */
+    }*/
 
     throw new UnsupportedOperationException(String.format("Cannot determine JNI library name for ARCH='%s' OS='%s' name='%s'", ARCH, OS, name));
   }
