@@ -43,15 +43,27 @@ public class LibraryLoadPreparer {
       return String.format("%s-linux-py%s-%s", name, pythonVersion, is64Bit() ? "x64" : "");
     } else if (isWindows() && is64Bit()) {
       return String.format("%s-win-py%s-%s", name, pythonVersion, is64Bit() ? "x64" : "");
-    } /*else if (isMac()) {
+    } else if (isMac()) {
       return String.format("%s-osx-py%s", name, pythonVersion);
-    } else if (isFreeBSD()) {
-      return String.format("%s-freebsd%s", name, is64Bit() ? "x64" : "");
-    } else if (isOpenBSD()) {
-      return String.format("%s-openbsd%s", name, is64Bit() ? "x64" : "");
-    }*/
+    }
 
-    throw new UnsupportedOperationException(String.format("Cannot determine JNI library name for ARCH='%s' OS='%s' name='%s'", ARCH, OS, name));
+    throw new UnsupportedOperationException(
+      String.format("Cannot determine JNI library name for ARCH='%s' OS='%s' name='%s'", ARCH, OS, name)
+    );
+  }
+
+  public static String osArchPrefix() {
+    if (isUnix()) {
+      return "lib";
+    } else if (isWindows() && is64Bit()) {
+      return "";
+    } else if (isMac()) {
+      return "";
+    }
+
+    throw new UnsupportedOperationException(
+      String.format("Cannot determine JNI library name for ARCH='%s' OS='%s'", ARCH, OS)
+    );
   }
 
   public static String getLibraryBaseName(final String name, final String pythonVersion) {
@@ -70,7 +82,7 @@ public class LibraryLoadPreparer {
   }
 
   public static String getLibraryFileName(final String name, final String pythonVersion) {
-    return  "lib" + getLibraryBaseName(name, pythonVersion) + osExtension();
+    return  getLibraryBaseName(name, pythonVersion) + osExtension();
   }
 
   static void fromJar(final File temp, final String fileName, final ClassLoader classLoader) throws IOException {
@@ -83,9 +95,10 @@ public class LibraryLoadPreparer {
     }
   }
 
-  static File fromJarToTemp(final String baseName, final String pythonVersion, final ClassLoader classLoader) throws IOException {
+  static File fromJarToTemp(final String baseName, final String pythonVersion, final ClassLoader classLoader)
+    throws IOException {
     final File temp;
-    temp = File.createTempFile("lib" + getLibraryBaseName(baseName, pythonVersion), osExtension());
+    temp = File.createTempFile(osArchPrefix() + getLibraryBaseName(baseName, pythonVersion), osExtension());
 
     if (!temp.exists()) {
       throw new RuntimeException("File " + temp.getAbsolutePath() + " does not exist.");
