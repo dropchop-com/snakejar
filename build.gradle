@@ -187,10 +187,10 @@ model {
         baseName = "${project.name}-win-py${python_version}-x64"
       }
       if (OperatingSystem.current().isLinux()) {
-        baseName = "lib${project.name}-linux-py${python_version}-x64"
+        baseName = "${project.name}-linux-py${python_version}-x64"
       }
       if (OperatingSystem.current().isMacOsX()) {
-        baseName = "lib${project.name}-macos-py${python_version}-x64"
+        baseName = "${project.name}-macos-py${python_version}-x64"
       }
       binaries.all {
         def pyIncludeDir = pyIncludeDir()
