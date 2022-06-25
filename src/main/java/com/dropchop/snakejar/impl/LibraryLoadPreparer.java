@@ -41,7 +41,7 @@ public class LibraryLoadPreparer {
   public static String osArchSuffix(final String name, final String pythonVersion) {
     if (isUnix()) {
       return String.format("%s-linux-py%s-%s", name, pythonVersion, is64Bit() ? "x64" : "");
-    } else if (isWindows() && is64Bit()) {
+    } else if (isWindows()) {
       return String.format("%s-win-py%s-%s", name, pythonVersion, is64Bit() ? "x64" : "");
     } else if (isMac()) {
       return String.format("%s-osx-py%s", name, pythonVersion);
@@ -55,7 +55,7 @@ public class LibraryLoadPreparer {
   public static String osArchPrefix() {
     if (isUnix()) {
       return "lib";
-    } else if (isWindows() && is64Bit()) {
+    } else if (isWindows()) {
       return "";
     } else if (isMac()) {
       return "";
@@ -105,7 +105,7 @@ public class LibraryLoadPreparer {
     } else {
       temp.deleteOnExit();
     }
-    String libFileName = "lib" + getLibraryBaseName(baseName, pythonVersion) + osExtension();
+    String libFileName = osArchPrefix() + getLibraryBaseName(baseName, pythonVersion) + osExtension();
 
     fromJar(temp, libFileName, classLoader);
     return temp;
