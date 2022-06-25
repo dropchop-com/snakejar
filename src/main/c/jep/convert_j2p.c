@@ -67,7 +67,7 @@ PyObject* jobject_As_PyString(JNIEnv *env, jobject jobj)
     return result;
 }
 
-static PyObject* Boolean_As_PyObject(JNIEnv *env, jobject jobj)
+PyObject* Boolean_As_PyObject(JNIEnv *env, jobject jobj)
 {
     jboolean b = java_lang_Boolean_booleanValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
@@ -76,7 +76,7 @@ static PyObject* Boolean_As_PyObject(JNIEnv *env, jobject jobj)
     return jboolean_As_PyObject(b);
 }
 
-static PyObject* Character_As_PyObject(JNIEnv *env, jobject jobj)
+PyObject* Character_As_PyObject(JNIEnv *env, jobject jobj)
 {
     jchar c = java_lang_Character_charValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {

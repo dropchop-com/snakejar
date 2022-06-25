@@ -4,7 +4,8 @@ static void register_module(JNIEnv *env, jobject interp_obj, const char *method,
   jobject module;
   jclass interp_cls;
   jmethodID register_mid;
-  bool err = false; int sz = 1024; char err_msg[sz];
+  bool err = false; int sz = 2048;
+  char err_msg[2048];
 
   if (!err && !(module = (*env)->NewDirectByteBuffer(env, (void*) pyModule, sizeof(PyObject)))) {
     snprintf(err_msg, sz, "Could not create imported module ptr container [%s] object!", CLS_NAME_BYTE_BUFF);
@@ -38,7 +39,8 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1com
   PyObject *pyModule, *pyCode;
   PyGILState_STATE gil_state;
 
-  bool err = false; int sz = 2048; char err_msg[sz];
+  bool err = false; int sz = 2048;
+  char err_msg[2048];
 
   if ((*env)->IsSameObject(env, module_name, NULL)) {//is null
     sj_throw_error(env, "Missing module name for compilation!");
@@ -123,7 +125,8 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
   jobject ret = NULL;
   PyObject *pModule, *callable;
   PyGILState_STATE gil_state;
-  size_t sz = 2048; char err_msg[sz];
+  size_t sz = 2048;
+  char err_msg[2048];
 
   char *m_name = sj_jni_jstring_to_cstr(env, module_name);
   char *f_name = sj_jni_jstring_to_cstr(env, func_name);
@@ -177,7 +180,8 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
   jobject ret = NULL;
     PyObject *pModule, *callable_cls, *callable;
     PyGILState_STATE gil_state;
-    size_t sz = 2048; char err_msg[sz];
+    size_t sz = 2048;
+    char err_msg[2048];
 
     char *m_name = sj_jni_jstring_to_cstr(env, module_name);
     char *c_name = sj_jni_jstring_to_cstr(env, class_name);
@@ -249,7 +253,7 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
   PyObject *pModule, *callable;
   PyGILState_STATE gil_state;
   char str[1024];
-  bool err = false; int sz = 2048; char err_msg[sz];
+  bool err = false; int sz = 2048; char err_msg[2048];
 
   return ret;
 }

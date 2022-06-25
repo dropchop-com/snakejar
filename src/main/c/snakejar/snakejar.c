@@ -35,7 +35,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
   return JNI_VERSION_1_6;
 }
 
-JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
+JNIEXPORT void JNICALL
+JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
 #define PY_CMD_EXE_PATH "python -c \"import sys; print(sys.executable)\""

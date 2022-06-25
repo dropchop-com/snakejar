@@ -1,4 +1,5 @@
 import org.gradle.internal.jvm.Jvm
+import org.gradle.internal.os.OperatingSystem;
 
 plugins {
   id 'java'
@@ -20,8 +21,15 @@ def pyVersionLibPath() {
   def (python_version, python_lib_path) = ret.tokenize(';;')
   def (major_num, minor_num, build_num) = python_version.trim().tokenize('.')
 
-  project.ext.python_version = major_num + "." + minor_num
+  project.ext.python_version_major = major_num
+  project.ext.python_version_minor = minor_num
+  if (minor_num == null) {
+    project.ext.python_version = major_num
+  } else {
+    project.ext.python_version = major_num + "." + minor_num
+  }
   project.ext.python_lib_path = python_lib_path
+  project.ext.python_lib_dir = new File(python_lib_path).parentFile.getAbsolutePath()
   return ret
 }
 
@@ -83,10 +91,11 @@ test {
 task copyLibs(type: Copy) {
   from("${buildDir}/libs/snakejar/shared/") {
     include 'lib*.so'
-    include 'lib*.dll'
+    include '*.dll'
     include 'lib*.dynlib'
   }
-  into "${buildDir}/prep"
+  //into "${sourceDir}/main/resources/"
+  into project.sourceSets.main.resources.srcDirs[0]
 }
 
 jar {
@@ -154,15 +163,15 @@ model {
     x64 {
       architecture "x86_64"
     }
-    x86 {
-      architecture "x86"
-    }
+//    x86 {
+//      architecture "x86"
+//    }
   }
 
   components {
     snakejar(NativeLibrarySpec) {
       // targetPlatform "x86"
-      // targetPlatform "x64"
+      targetPlatform "x64"
       sources {
         c {
           source {
@@ -174,16 +183,25 @@ model {
           }
         }
       }
+      if (OperatingSystem.current().isWindows()) {
+        baseName = "${project.name}-win-py${python_version}-x64"
+      }
+      if (OperatingSystem.current().isLinux()) {
+        baseName = "lib${project.name}-linux-py${python_version}-x64"
+      }
+      if (OperatingSystem.current().isMacOsX()) {
+        baseName = "lib${project.name}-macos-py${python_version}-x64"
+      }
       binaries.all {
         def pyIncludeDir = pyIncludeDir()
         if (targetPlatform.operatingSystem.macOsX) {
           cCompiler.args '-I', "${Jvm.current().javaHome}/include"
           cCompiler.args '-I', "${Jvm.current().javaHome}/include/darwin"
-		      cCompiler.args '-I', pyIncludeDir
+          cCompiler.args '-I', pyIncludeDir
           cCompiler.args '-mmacosx-version-min=10.4'
           linker.args '-mmacosx-version-min=10.4'
           linker.args "-lpython${python_version}"
-          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.dynlib"
+          //linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-x64.dynlib"
         } else if (targetPlatform.operatingSystem.linux) {
           cCompiler.args '-I', "${Jvm.current().javaHome}/include"
           cCompiler.args '-I', "${Jvm.current().javaHome}/include/linux"
@@ -192,18 +210,21 @@ model {
           cCompiler.args '-DJEP_NUMPY_ENABLED=0'
           linker.args "-lpython${python_version}"
           linker.args "-rdynamic"
-          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-py${python_version}-x64.so"
+          //linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-linux-py${python_version}-x64.so"
         } else if (targetPlatform.operatingSystem.windows) {
-          cCompiler.args "-I${Jvm.current().javaHome}/include"
-          cCompiler.args "-I${Jvm.current().javaHome}/include/win32"
-		      cCompiler.args '-I', pyIncludeDir
-          linker.args "Shlwapi.lib", "Advapi32.lib"
-        } else if (targetPlatform.operatingSystem.freeBSD) {
-          cCompiler.args '-I', "${Jvm.current().javaHome}/include"
-          cCompiler.args '-I', "${Jvm.current().javaHome}/include/freebsd"
-		      cCompiler.args '-I', pyIncludeDir
-          linker.args "-lpython${python_version}"
-          linker.args '-o', "${buildDir}/libs/${project.name}/shared/lib${project.name}-bsd-x64.so"
+          cCompiler.args "/I${Jvm.current().javaHome}/include"
+          cCompiler.args "/I${Jvm.current().javaHome}/include/win32"
+          cCompiler.args "/I${pyIncludeDir}"
+          cCompiler.args "/D_WINDLL"
+          cCompiler.args "/DWIN32"
+          cCompiler.args '/D_FILE_OFFSET_BITS=64'
+          cCompiler.args '/DJEP_NUMPY_ENABLED=0'
+          linker.args "/LIBPATH:${python_lib_dir}"
+          linker.args "/LIBPATH:${Jvm.current().javaHome}/lib"
+          linker.args "/IMPLIB:python${python_version}.lib"
+          linker.args "/IMPLIB:jvm.lib"
+          linker.args "/MACHINE:X64"
+          //linker.args "/OUT:${project.name}-win-py${python_version}-x64.dll"
         }
       }
     }

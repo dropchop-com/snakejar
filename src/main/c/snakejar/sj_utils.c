@@ -77,11 +77,11 @@ void sj_wlog(JNIEnv *pEnv, sj_log_level level, const char *restrict src, const i
     tname = "unkn";
   }
   if(rc2 > 0) {
-    fwprintf(appender, L"SnakeJar %s [%s] [%s:%d @ %s]: %ls\n",
+    fwprintf(appender, L"SnakeJar %hs [%hs] [%hs:%d @ %hs]: %ls\n",
       time_buf, SJ_LOG_LEVELS[level], src, line, tname, buf);
   } else {
-    fwprintf(appender, L"SnakeJar %s [%s] [%s:%d @ %s]: (string too long)\n",
-      SJ_LOG_LEVELS[level], time_buf, src, tname, line);
+    fwprintf(appender, L"SnakeJar %hs [%hs] [%hs:%d @ %hs]: (string too long)\n",
+      SJ_LOG_LEVELS[level], time_buf, src, line, tname);
   }
   if (pEnv != NULL) {
     free(tname);
@@ -89,11 +89,80 @@ void sj_wlog(JNIEnv *pEnv, sj_log_level level, const char *restrict src, const i
   fflush(appender);
 }
 
+/*
+POSIX getline replacement for non-POSIX systems (like Windows)
+Differences:
+    - the function returns int64_t instead of ssize_t
+    - does not accept NUL characters in the input file
+Warnings:
+    - the function sets EINVAL, ENOMEM, EOVERFLOW in case of errors. The above are not defined by ISO C17,
+    but are supported by other C compilers like MSVC
+*/
+int64_t my_getline(char **restrict line, size_t *restrict len, FILE *restrict fp) {
+    // Check if either line, len or fp are NULL pointers
+    if(line == NULL || len == NULL || fp == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    // Use a chunk array of 128 bytes as parameter for fgets
+    char chunk[128];
+
+    // Allocate a block of memory for *line if it is NULL or smaller than the chunk array
+    if(*line == NULL || *len < sizeof(chunk)) {
+        *len = sizeof(chunk);
+        if((*line = malloc(*len)) == NULL) {
+            errno = ENOMEM;
+            return -1;
+        }
+    }
+
+    // "Empty" the string
+    (*line)[0] = '\0';
+
+    while(fgets(chunk, sizeof(chunk), fp) != NULL) {
+        // Resize the line buffer if necessary
+        size_t len_used = strlen(*line);
+        size_t chunk_used = strlen(chunk);
+
+        if(*len - len_used < chunk_used) {
+            // Check for overflow
+            if(*len > SIZE_MAX / 2) {
+                errno = EOVERFLOW;
+                return -1;
+            } else {
+                *len *= 2;
+            }
+
+            if((*line = realloc(*line, *len)) == NULL) {
+                errno = ENOMEM;
+                return -1;
+            }
+        }
+
+        // Copy the chunk to the end of the line buffer
+        memcpy(*line + len_used, chunk, chunk_used);
+        len_used += chunk_used;
+        (*line)[len_used] = '\0';
+
+        // Check if *line contains '\n', if yes, return the *line length
+        if((*line)[len_used - 1] == '\n') {
+            return len_used;
+        }
+    }
+
+    return -1;
+}
+
 void sj_pread_line(const char *restrict command, char * buffer, size_t buffer_len) {
   FILE *stream; size_t num_read;
   sj_log_debug(L"Invoking [%s]...", command);
+#ifndef WIN32
   stream = popen(command, "r");
-  num_read = getline(&buffer, &buffer_len, stream);
+#else
+  stream = _popen(command, "r");
+#endif
+  num_read = my_getline(&buffer, &buffer_len, stream);
   if (buffer[buffer_len - 1] != '\0') {
     sj_log_error(L"Insufficient buffer size for command response!");
     buffer[buffer_len - 1] = '\0';
@@ -102,15 +171,25 @@ void sj_pread_line(const char *restrict command, char * buffer, size_t buffer_le
   if (buffer[num_read - 1] == '\n') {
     buffer[num_read - 1] = '\0';
   }
+#ifndef WIN32
   pclose(stream);
+#else
+  _pclose(stream);
+#endif
   sj_log_info(L"Invoked [%s] with result [%s].", command, buffer);
 }
 
 void sj_load_lib(const char *restrict lib_location) {
   sj_log_debug(L"Loading [%s]...", lib_location);
+#ifndef WIN32
   if (!dlopen(lib_location, RTLD_LAZY | RTLD_NOLOAD | RTLD_GLOBAL)) {
     sj_log_error(L"Error loading [%s]!", lib_location);
   }
+#else
+  if (!LoadLibrary(lib_location)) {
+    sj_log_error(L"Error loading [%s]!", lib_location);
+  }
+#endif
   sj_log_info(L"Loaded [%s].", lib_location);
 }
 
@@ -139,7 +218,7 @@ JNIEnv* sj_get_env(JavaVM *vm) {
 void sj_throw_error(JNIEnv *env, const char *restrict fmt, ...) {
   jclass ex_cls;
   size_t buffer_len = 4096;
-  char buffer[buffer_len];
+  char buffer[4096];
 
   if (!(ex_cls = (*env)->FindClass(env, CLS_NAME_EXCEPTION))) {
     sj_log_error(L"Could not find [%s] class!", CLS_NAME_EXCEPTION);

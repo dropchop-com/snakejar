@@ -1,11 +1,24 @@
 #include <stdio.h>
-#include <dlfcn.h>
+#ifndef WIN32
+  #include <dlfcn.h>
+#else
+  #include <windows.h>
+#endif
 #include <stdbool.h>
 #include <wchar.h>
 #include <stdarg.h>
 #include <time.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <errno.h>
 #include <jni.h>
+
+#ifdef _MSC_VER
+    #define _CRT_SECURE_NO_WARNINGS 1
+    #define restrict __restrict
+#endif
 
 #ifndef _Included_sj_utils
 #define _Included_sj_utils
@@ -25,6 +38,7 @@ void sj_wlog_file_init(const char *restrict fname);
 void sj_wlog_finalize();
 void sj_wlog(JNIEnv *pEnv, sj_log_level level, const char *restrict src, const int line, const wchar_t *restrict fmt, ...);
 
+#ifndef WIN32
 #define sj_log_error(fmt, args...) sj_wlog(NULL, sj_error, __FSRC__, __LINE__, fmt, ##args)
 #define sj_log_warn(fmt, args...) sj_wlog(NULL, sj_warning, __FSRC__, __LINE__, fmt, ##args)
 #define sj_log_info(fmt, args...) sj_wlog(NULL, sj_info, __FSRC__, __LINE__, fmt, ##args)
@@ -34,6 +48,17 @@ void sj_wlog(JNIEnv *pEnv, sj_log_level level, const char *restrict src, const i
 #define sj_jlog_warn(pEnv, fmt, args...) sj_wlog(pEnv, sj_warning, __FSRC__, __LINE__, fmt, ##args)
 #define sj_jlog_info(pEnv, fmt, args...) sj_wlog(pEnv, sj_info, __FSRC__, __LINE__, fmt, ##args)
 #define sj_jlog_debug(pEnv, fmt, args...) sj_wlog(pEnv, sj_debug, __FSRC__, __LINE__, fmt, ##args)
+#else
+#define sj_log_error(fmt, ...) sj_wlog(NULL, sj_error, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#define sj_log_warn(fmt, ...) sj_wlog(NULL, sj_warning, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#define sj_log_info(fmt, ...) sj_wlog(NULL, sj_info, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#define sj_log_debug(fmt, ...) sj_wlog(NULL, sj_debug, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+
+#define sj_jlog_error(pEnv, fmt, ...) sj_wlog(pEnv, sj_error, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#define sj_jlog_warn(pEnv, fmt, ...) sj_wlog(pEnv, sj_warning, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#define sj_jlog_info(pEnv, fmt, ...) sj_wlog(pEnv, sj_info, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#define sj_jlog_debug(pEnv, fmt, ...) sj_wlog(pEnv, sj_debug, __FSRC__, __LINE__, fmt, __VA_ARGS__)
+#endif
 
 void sj_pread_line(const char *restrict command, char *restrict buffer, size_t buffer_len);
 
