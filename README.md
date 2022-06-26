@@ -34,9 +34,9 @@ namely for marshalling function arguments and unmarshalling results from Java to
 ## Limitations
 
 Of course, we also introduced numerous limitations, so we only support: 
-- single usage paradigm (contrary to Jep with much richer usage patterns),
-- Python 3.8, 3.9 or 3.10 (if you use compiled code),
-- Linux
+- Single usage paradigm (contrary to Jep with much richer usage patterns),
+- Python 3.8, 3.9 or 3.10 (if you use compiled code) on Linux,
+- Python 3.10 (if you use compiled code) on Windows,
   
 Internal Python related notes:
 - We don't use SubInterpreters for various reasons,
@@ -49,7 +49,7 @@ Due to our lack of time (i.e. money for beer) we are currently unable to support
 other OSes and versions.
 
 In the future, we might support additional stuff, but don't count on it
-(since our main use is in Linux Containers with Quarkus).
+(since our main use is in Linux Containers with Quarkus and @krissman's Windows :D).
 
 ## Usage
 We support single usage pattern:
@@ -79,7 +79,7 @@ Import from maven:
 <dependency>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.13</version>
 </dependency>
 ```
 
