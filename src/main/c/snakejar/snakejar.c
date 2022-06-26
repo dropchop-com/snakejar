@@ -72,6 +72,9 @@ static bool pre_init(JNIEnv *env) {
 
   sj_jlog_debug(env, L"Setting python path [%ls]!", wbuffer);
   Py_SetProgramName(wbuffer);
+#ifdef WIN32 // https://github.com/python/cpython/issues/78906
+  _Py_SetProgramFullPath(wbuffer);
+#endif
   free(wbuffer);
   wchar_t *path = Py_GetProgramFullPath();
   sj_jlog_info(env, L"Python path is set to [%ls].", path);
