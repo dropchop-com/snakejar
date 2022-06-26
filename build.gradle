@@ -219,7 +219,7 @@ model {
           cCompiler.args "/DWIN32"
           cCompiler.args '/D_FILE_OFFSET_BITS=64'
           cCompiler.args '/DJEP_NUMPY_ENABLED=0'
-          linker.args "/LIBPATH:${python_lib_dir}"
+          linker.args "/LIBPATH:${python_lib_dir}/libs"
           linker.args "/LIBPATH:${Jvm.current().javaHome}/lib"
           linker.args "/IMPLIB:python${python_version}.lib"
           linker.args "/IMPLIB:jvm.lib"

@@ -58,27 +58,27 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1com
   char *f_name = sj_jni_jstring_to_cstr(env, file_name);
   char *m_name = sj_jni_jstring_to_cstr(env, module_name);
   char *m_src = sj_jni_jstring_to_cstr(env, module_src);
-  sj_jlog_debug(env, L"Compiling [%s] into module [%s]...", f_name ? f_name : "NULL", m_name ? m_name : "NULL");
+  sj_jlog_debug(env, L"Compiling [%hs] into module [%hs]...", f_name ? f_name : "NULL", m_name ? m_name : "NULL");
 
   gil_state = PyGILState_Ensure();
 
   pyCode = Py_CompileString(m_src, f_name, Py_file_input);
   if (!err && (pyCode == NULL || PyErr_Occurred())) {
-    snprintf(err_msg, sz, "Compilation of module [%s] failed!", m_name ? m_name : "NULL");
-    sj_jlog_error(env, L"%s", err_msg);
+    snprintf(err_msg, sz, "Compilation of module [%hs] failed!", m_name ? m_name : "NULL");
+    sj_jlog_error(env, L"%hs", err_msg);
     PyErr_Print();
     err = true;
   } else {
-    sj_jlog_debug(env, L"Compiled module [%s].", m_name ? m_name : "NULL");
+    sj_jlog_debug(env, L"Compiled module [%hs].", m_name ? m_name : "NULL");
   }
   if (!err) {
     pyModule = PyImport_ExecCodeModuleEx(m_name, pyCode, f_name);
     if (!err && (pyModule == NULL || PyErr_Occurred())) {
-      snprintf(err_msg, sz, "Import of compiled module [%s] failed!", m_name ? m_name : "NULL");
+      snprintf(err_msg, sz, "Import of compiled module [%hs] failed!", m_name ? m_name : "NULL");
       PyErr_Print();
       err = true;
     } else {
-      sj_jlog_debug(env, L"Imported module [%s].", m_name ? m_name : "NULL");
+      sj_jlog_debug(env, L"Imported module [%hs].", m_name ? m_name : "NULL");
     }
   }
 
@@ -89,7 +89,7 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1com
   free(m_name);
 
   if (err) {
-    sj_throw_error(env, "%s", err_msg);
+    sj_throw_error(env, "%hs", err_msg);
     return;
   }
 
@@ -109,11 +109,11 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1fre
 
   pyModule = (PyObject*) (*env)->GetDirectBufferAddress(env, module);
   if (pyModule != NULL) {
-    sj_jlog_debug(env, L"Found module [%s][%p].", m_name ? m_name : "NULL", pyModule);
+    sj_jlog_debug(env, L"Found module [%hs][%p].", m_name ? m_name : "NULL", pyModule);
     gil_state = PyGILState_Ensure();
     Py_XDECREF(pyModule);
     PyGILState_Release(gil_state);
-    sj_jlog_debug(env, L"Released module [%s][%p].", m_name ? m_name : "NULL", pyModule);
+    sj_jlog_debug(env, L"Released module [%hs][%p].", m_name ? m_name : "NULL", pyModule);
   }
 
   //free(m_name);
@@ -132,35 +132,35 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
   char *f_name = sj_jni_jstring_to_cstr(env, func_name);
 
   if ((*env)->IsSameObject(env, module, NULL)) {//is null
-    snprintf(err_msg, sz, "Unable to locate module [%s]!", m_name ? m_name : "NULL");
-    sj_jlog_error(env, L"%s", err_msg);
+    snprintf(err_msg, sz, "Unable to locate module [%hs]!", m_name ? m_name : "NULL");
+    sj_jlog_error(env, L"%hs", err_msg);
     sj_throw_error(env, err_msg);
   } else {
-    sj_jlog_debug(env, L"Invoking function [m:%s]->[f:%s]...", m_name ? m_name : "NULL", f_name ? f_name : "NULL");
+    sj_jlog_debug(env, L"Invoking function [m:%hs]->[f:%hs]...", m_name ? m_name : "NULL", f_name ? f_name : "NULL");
 
     pModule = (PyObject*) (*env)->GetDirectBufferAddress(env, module);
-    sj_jlog_debug(env, L"Found module [%s][%p].", m_name ? m_name : "NULL", pModule);
+    sj_jlog_debug(env, L"Found module [%hs][%p].", m_name ? m_name : "NULL", pModule);
 
     gil_state = PyGILState_Ensure();
 
-    sj_jlog_debug(env, L"Looking for [%s].", f_name ? f_name : "NULL");
+    sj_jlog_debug(env, L"Looking for [%hs].", f_name ? f_name : "NULL");
     callable = PyObject_GetAttrString(pModule, f_name);
     if (callable == NULL || PyErr_Occurred()) {
       if (callable == NULL) {
-        snprintf(err_msg, sz, "Unable to locate module [%s] function [%s]!", m_name ? m_name : "NULL", f_name ? f_name : "NULL");
-        sj_jlog_error(env, L"%s", err_msg);
+        snprintf(err_msg, sz, "Unable to locate module [%hs] function [%hs]!", m_name ? m_name : "NULL", f_name ? f_name : "NULL");
+        sj_jlog_error(env, L"%hs", err_msg);
       }
       if (PyErr_Occurred()) {
         PyErr_Print();
       }
       sj_throw_error(env, err_msg);
     } else {
-      sj_jlog_debug(env, L"Found function [%s][%p].", f_name ? f_name : "NULL", callable);
+      sj_jlog_debug(env, L"Found function [%hs][%p].", f_name ? f_name : "NULL", callable);
       ret = sj_invoke_as(env, callable, args, kwargs, ret_type);
       if (PyErr_Occurred()) {
         process_py_exception(env);
       } else {
-        sj_jlog_info(env, L"Invoked function [m:%s]->[f:%s]",m_name ? m_name : "NULL", f_name ? f_name : "NULL");
+        sj_jlog_info(env, L"Invoked function [m:%hs]->[f:%hs]",m_name ? m_name : "NULL", f_name ? f_name : "NULL");
       }
       Py_DECREF(callable);
     }
@@ -188,47 +188,47 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
     char *f_name = sj_jni_jstring_to_cstr(env, func_name);
 
     if ((*env)->IsSameObject(env, module, NULL)) {//is null
-      snprintf(err_msg, sz, "Unable to locate module [%s]!", m_name ? m_name : "NULL");
-      sj_jlog_error(env, L"%s", err_msg);
+      snprintf(err_msg, sz, "Unable to locate module [%hs]!", m_name ? m_name : "NULL");
+      sj_jlog_error(env, L"%hs", err_msg);
       sj_throw_error(env, err_msg);
     } else {
       pModule = (PyObject*) (*env)->GetDirectBufferAddress(env, module);
-      sj_jlog_debug(env, L"Found module [%s][%p].", m_name ? m_name : "NULL", pModule);
+      sj_jlog_debug(env, L"Found module [%hs][%p].", m_name ? m_name : "NULL", pModule);
 
       gil_state = PyGILState_Ensure();
 
-      sj_jlog_debug(env, L"Looking for class [%s].", c_name ? c_name : "NULL");
+      sj_jlog_debug(env, L"Looking for class [%hs].", c_name ? c_name : "NULL");
       callable_cls = PyObject_GetAttrString(pModule, c_name);
       if (callable_cls == NULL || PyErr_Occurred()) {
         if (callable_cls == NULL) {
-          snprintf(err_msg, sz, "Unable to locate module [%s] class [%s]!", m_name ? m_name : "NULL", c_name ? c_name : "NULL");
-          sj_jlog_error(env, L"%s", err_msg);
+          snprintf(err_msg, sz, "Unable to locate module [%hs] class [%hs]!", m_name ? m_name : "NULL", c_name ? c_name : "NULL");
+          sj_jlog_error(env, L"%hs", err_msg);
         }
         if (PyErr_Occurred()) {
           PyErr_Print();
         }
         sj_throw_error(env, err_msg);
       } else {
-        sj_jlog_debug(env, L"Found class [%s][%p].", c_name ? c_name : "NULL", callable_cls);
+        sj_jlog_debug(env, L"Found class [%hs][%p].", c_name ? c_name : "NULL", callable_cls);
         callable = PyObject_GetAttrString(callable_cls, f_name);
         if (callable == NULL || PyErr_Occurred()) {
           if (callable == NULL) {
-            snprintf(err_msg, sz, "Unable to locate module [%s] class [%s] function [%s]!",
+            snprintf(err_msg, sz, "Unable to locate module [%hs] class [%hs] function [%hs]!",
                                    m_name ? m_name : "NULL", c_name ? c_name : "NULL", f_name ? f_name : "NULL");
-            sj_jlog_error(env, L"%s", err_msg);
+            sj_jlog_error(env, L"%hs", err_msg);
           }
           if (PyErr_Occurred()) {
             PyErr_Print();
           }
           sj_throw_error(env, err_msg);
         } else {
-          sj_jlog_debug(env, L"Found class [%s][%p] function [%s][%p].",
+          sj_jlog_debug(env, L"Found class [%hs][%p] function [%hs][%p].",
                                c_name ? c_name : "NULL", callable_cls, f_name ? f_name : "NULL", callable);
           ret = sj_invoke_as(env, callable, args, kwargs, ret_type);
           if (PyErr_Occurred()) {
             process_py_exception(env);
           } else {
-            sj_jlog_info(env, L"Invoked module class function [%s.%s.%s]",
+            sj_jlog_info(env, L"Invoked module class function [%hs.%hs.%hs]",
                                 m_name ? m_name : "NULL", c_name ? c_name : "NULL", f_name ? f_name : "NULL");
           }
           Py_DECREF(callable);

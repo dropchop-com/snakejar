@@ -29,10 +29,7 @@ def get_python_library(python_version):
 
         candidate_lib_prefixes = ['', 'lib']
 
-        candidate_extensions = ['.lib', '.so', '.a']
-        if sysconfig.get_config_var('WITH_DYLD'):
-            candidate_extensions.insert(0, '.dylib')
-
+        candidate_extensions = ['.so', '.dll', '.dylib']
         candidate_versions = [python_version]
         if python_version:
             candidate_versions.append('')
@@ -57,18 +54,17 @@ def get_python_library(python_version):
             libdir = os.path.abspath(os.path.join(
                 sysconfig.get_config_var('LIBDEST'), "..", "libs"))
 
-
         candidates = (
             os.path.join(
                 libdir,
                 ''.join((pre, 'python', ver, abi, ext))
             )
             for (pre, ext, ver, abi) in itertools.product(
-            candidate_lib_prefixes,
-            candidate_extensions,
-            candidate_versions,
-            candidate_abiflags
-        )
+                candidate_lib_prefixes,
+                candidate_extensions,
+                candidate_versions,
+                candidate_abiflags
+            )
         )
 
         for candidate in candidates:
@@ -76,6 +72,26 @@ def get_python_library(python_version):
                 # we found a (likely alternate) libpython
                 python_library = candidate
                 break
+
+        if not python_library:
+            libdir = os.path.abspath(os.path.join(libdir, os.pardir))
+            candidates = (
+                os.path.join(
+                    libdir,
+                    ''.join((pre, 'python', ver, abi, ext))
+                )
+                for (pre, ext, ver, abi) in itertools.product(
+                    candidate_lib_prefixes,
+                    candidate_extensions,
+                    candidate_versions,
+                    candidate_abiflags
+                )
+            )
+            for candidate in candidates:
+                if os.path.exists(candidate):
+                    # we found a (likely alternate) libpython
+                    python_library = candidate
+                    break
 
     # TODO(opadron): what happens if we don't find a libpython?
 

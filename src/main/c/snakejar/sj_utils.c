@@ -156,7 +156,7 @@ int64_t my_getline(char **restrict line, size_t *restrict len, FILE *restrict fp
 
 void sj_pread_line(const char *restrict command, char * buffer, size_t buffer_len) {
   FILE *stream; size_t num_read;
-  sj_log_debug(L"Invoking [%s]...", command);
+  sj_log_debug(L"Invoking [%hs]...", command);
 #ifndef WIN32
   stream = popen(command, "r");
 #else
@@ -176,21 +176,21 @@ void sj_pread_line(const char *restrict command, char * buffer, size_t buffer_le
 #else
   _pclose(stream);
 #endif
-  sj_log_info(L"Invoked [%s] with result [%s].", command, buffer);
+  sj_log_info(L"Invoked [%hs] with result [%hs].", command, buffer);
 }
 
 void sj_load_lib(const char *restrict lib_location) {
-  sj_log_debug(L"Loading [%s]...", lib_location);
+  sj_log_debug(L"Loading [%hs]...", lib_location);
 #ifndef WIN32
   if (!dlopen(lib_location, RTLD_LAZY | RTLD_NOLOAD | RTLD_GLOBAL)) {
-    sj_log_error(L"Error loading [%s]!", lib_location);
+    sj_log_error(L"Error loading [%hs]!", lib_location);
   }
 #else
   if (!LoadLibrary(lib_location)) {
-    sj_log_error(L"Error loading [%s]!", lib_location);
+    sj_log_error(L"Error loading [%hs]!", lib_location);
   }
 #endif
-  sj_log_info(L"Loaded [%s].", lib_location);
+  sj_log_info(L"Loaded [%hs].", lib_location);
 }
 
 JavaVM *sj_vm;
@@ -221,7 +221,7 @@ void sj_throw_error(JNIEnv *env, const char *restrict fmt, ...) {
   char buffer[4096];
 
   if (!(ex_cls = (*env)->FindClass(env, CLS_NAME_EXCEPTION))) {
-    sj_log_error(L"Could not find [%s] class!", CLS_NAME_EXCEPTION);
+    sj_log_error(L"Could not find [%hs] class!", CLS_NAME_EXCEPTION);
     return;
   }
 
@@ -261,7 +261,7 @@ bool sj_jni_get_sys_property(JNIEnv *env, const char *key, char *buffer, size_t 
 	characters = (*env)->GetStringUTFChars(env, string, NULL);
 	strncpy(buffer, characters, buffer_len);
 	if (buffer[buffer_len - 1] != '\0') {
-    sj_log_error(L"Insufficient buffer size for get_property [%s]!", key);
+    sj_log_error(L"Insufficient buffer size for get_property [%hs]!", key);
   }
 	buffer[buffer_len - 1] = '\0';
 	(*env)->ReleaseStringUTFChars(env, string, characters);
@@ -310,12 +310,12 @@ char* sj_jni_call_getter_str(JNIEnv *env, const char *getter_name, jclass cls, j
   jmethodID getter;
 
   if (!(getter = (*env)->GetMethodID(env, cls, getter_name, "()L" CLS_NAME_STRING ";"))) {
-    sj_log_error(L"Could not find [%s] method!", getter_name);
+    sj_log_error(L"Could not find [%hs] method!", getter_name);
     return NULL;
   }
 
   if (!(ret = (jstring)(*env)->CallObjectMethod(env, object, getter))) {
-    sj_log_error(L"Invoking [%s] method failed!", getter_name);
+    sj_log_error(L"Invoking [%hs] method failed!", getter_name);
     return NULL;
   }
 
@@ -350,15 +350,15 @@ jobject sj_get_interpreter_compiled_module(JNIEnv *env, jobject interp_obj, jstr
   jobject module;
   jclass interp_cls;
   if (!(interp_cls = (*env)->FindClass(env, CLS_NAME_INTERPRETER))) {
-    sj_log_error(L"Could not find [%s] class!", CLS_NAME_INTERPRETER);
+    sj_log_error(L"Could not find [%hs] class!", CLS_NAME_INTERPRETER);
     return NULL;
   }
   if (!(method_id = (*env)->GetMethodID(env, interp_cls, "getCompiledModule", "(L" CLS_NAME_STRING ";)L" CLS_NAME_BYTE_BUFF ";"))) {
-    sj_log_error(L"Could not find [%s.%s] method!", CLS_NAME_INTERPRETER, "getCompiledModule");
+    sj_log_error(L"Could not find [%hs.%hs] method!", CLS_NAME_INTERPRETER, "getCompiledModule");
     return NULL;
   }
   if (!(module = (*env)->CallObjectMethod(env, interp_obj, method_id, module_name))) {
-    sj_log_error(L"Invoke failed for [%s.%s] method!", CLS_NAME_INTERPRETER, "getCompiledModule");
+    sj_log_error(L"Invoke failed for [%hs.%hs] method!", CLS_NAME_INTERPRETER, "getCompiledModule");
     return NULL;
   }
   return module;
