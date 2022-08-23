@@ -93,19 +93,20 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
     return;
   }
   Py_InitializeEx(0);//initialize with no signal handlers and get GIL
-  module = PyImport_ImportModule("threading"); //needed for graceful destroy
+  module = PyImport_ImportModule("threading"); //needed for graceful destroy and correct threading init
+  //PyRun_SimpleString("def __neki:\n\tpass:\n"
+  //					"thread = threading.Thread(target=__neki, args=())\nthread.start()\nthread.join()");
   Py_XDECREF(module);
-  PyEval_SaveThread(); //save main interpreter state and release the GIL
-
-  gil = PyGILState_Ensure();
   if (!cache_frequent_classes(env)) {
     sj_jlog_warn(env, L"Unable to cache frequent classes!");
   }
   if (!cache_primitive_classes(env)) {
     sj_jlog_warn(env, L"Unable to cache primitive classes!");
   }
-  sj_jlog_info(env, L"Initialized Python.");
-  PyGILState_Release(gil);
+  tstate = PyThreadState_Get();
+  sj_set_main_thread_state(tstate);
+  sj_jlog_info(env, L"Initialized Python with thread state [%p].", tstate);
+  PyEval_ReleaseLock();
 }
 
 JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1destroy(JNIEnv *env, jobject obj) {

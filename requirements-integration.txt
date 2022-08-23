@@ -1,0 +1,4 @@
+ufal.udpipe
+fasttext
+classla
+stanza

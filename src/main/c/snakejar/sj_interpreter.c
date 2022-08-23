@@ -1,5 +1,16 @@
 #include "sj_interpreter.h"
 
+static PyThreadState* __main_thread_state = NULL;
+
+PyThreadState* sj_get_main_thread_state() {
+  return __main_thread_state;
+}
+
+void sj_set_main_thread_state(PyThreadState *tstate) {
+  __main_thread_state = tstate;
+}
+
+
 static void register_module(JNIEnv *env, jobject interp_obj, const char *method, jstring module_name, PyObject *pyModule) {
   jobject module;
   jclass interp_cls;
@@ -125,6 +136,7 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
   jobject ret = NULL;
   PyObject *pModule, *callable;
   PyGILState_STATE gil_state;
+  PyThreadState *tstate, *main_tstate;
   size_t sz = 2048;
   char err_msg[2048];
 
@@ -141,7 +153,10 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
     pModule = (PyObject*) (*env)->GetDirectBufferAddress(env, module);
     sj_jlog_debug(env, L"Found module [%hs][%p].", m_name ? m_name : "NULL", pModule);
 
-    gil_state = PyGILState_Ensure();
+    //gil_state = PyGILState_Ensure();
+    main_tstate = sj_get_main_thread_state();
+    tstate = PyThreadState_New(main_tstate->interp);
+    PyEval_AcquireThread(tstate);
 
     sj_jlog_debug(env, L"Looking for [%hs].", f_name ? f_name : "NULL");
     callable = PyObject_GetAttrString(pModule, f_name);
@@ -165,7 +180,8 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
       Py_DECREF(callable);
     }
 
-    PyGILState_Release(gil_state);
+    PyEval_ReleaseThread(tstate);
+    //PyGILState_Release(gil_state);
   }
 
   free(m_name);

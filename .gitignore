@@ -1,6 +1,8 @@
 build/
 agent/
 venv/
+venv-integration/
+models/
 target/
 **/.tmp/
 .gradle/

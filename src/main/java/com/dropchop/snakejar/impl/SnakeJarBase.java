@@ -144,24 +144,34 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
     if (poolName == null) {
       poolName = getDefaultThreadPoolName();
     }
-    ExecutorService pool = executorServiceMap.computeIfAbsent(poolName,
-      s -> {
-        BlockingQueue<Runnable> queue;
-        if (params.getNumCoreThreads() >= params.getMaxThreads()) {
-          queue = new LinkedBlockingQueue<>();
-        } else {
-          queue = new SynchronousQueue<>();
+
+    ExecutorService pool;
+    if (params.getNumCoreThreads() == 1 && params.getMaxThreads() == 1) {
+      pool = executorServiceMap.computeIfAbsent(poolName,
+        s -> Executors.newSingleThreadExecutor(this.threadFactory)
+      );
+      LOG.debug("Created newSingleThreadExecutor.");
+    } else {
+      pool = executorServiceMap.computeIfAbsent(poolName,
+        s -> {
+          BlockingQueue<Runnable> queue;
+          if (params.getNumCoreThreads() >= params.getMaxThreads()) {
+            queue = new LinkedBlockingQueue<>();
+          } else {
+            queue = new SynchronousQueue<>();
+          }
+          return new ThreadPoolExecutor(
+            params.getNumCoreThreads(),
+            params.getMaxThreads(),
+            params.getKeepAliveTimeout(),
+            params.getUnit(),
+            queue,
+            this.threadFactory
+          );
         }
-        return new ThreadPoolExecutor(
-          params.getNumCoreThreads(),
-          params.getMaxThreads(),
-          params.getKeepAliveTimeout(),
-          params.getUnit(),
-          queue,
-          this.threadFactory
-        );
-      }
-    );
+      );
+      LOG.debug("Created ThreadPoolExecutor.");
+    }
     new CompileInvoker(this, pool, sources).apply((Invocation<?>)null, null).get();
 
     LOG.trace("Prepared [{}].", this.executorServiceMap);
