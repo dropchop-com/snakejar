@@ -153,10 +153,13 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
     pModule = (PyObject*) (*env)->GetDirectBufferAddress(env, module);
     sj_jlog_debug(env, L"Found module [%hs][%p].", m_name ? m_name : "NULL", pModule);
 
-    //gil_state = PyGILState_Ensure();
+    gil_state = PyGILState_Ensure();
     main_tstate = sj_get_main_thread_state();
-    tstate = PyThreadState_New(main_tstate->interp);
-    PyEval_AcquireThread(tstate);
+    tstate = PyThreadState_Get();
+    //PyThreadState_Swap(main_tstate);
+    sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
+    //tstate = PyThreadState_New(main_tstate->interp);
+    //PyEval_AcquireThread(main_tstate);
 
     sj_jlog_debug(env, L"Looking for [%hs].", f_name ? f_name : "NULL");
     callable = PyObject_GetAttrString(pModule, f_name);
@@ -180,8 +183,8 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
       Py_DECREF(callable);
     }
 
-    PyEval_ReleaseThread(tstate);
-    //PyGILState_Release(gil_state);
+    //PyEval_ReleaseThread(main_tstate);
+    PyGILState_Release(gil_state);
   }
 
   free(m_name);

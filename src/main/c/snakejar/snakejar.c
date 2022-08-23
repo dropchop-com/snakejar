@@ -103,10 +103,10 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
   if (!cache_primitive_classes(env)) {
     sj_jlog_warn(env, L"Unable to cache primitive classes!");
   }
-  tstate = PyThreadState_Get();
+  tstate = PyEval_SaveThread();
   sj_set_main_thread_state(tstate);
   sj_jlog_info(env, L"Initialized Python with thread state [%p].", tstate);
-  PyEval_ReleaseLock();
+  // PyEval_ReleaseLock();
 }
 
 JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1destroy(JNIEnv *env, jobject obj) {

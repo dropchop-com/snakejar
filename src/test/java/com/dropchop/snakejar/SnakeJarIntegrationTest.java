@@ -11,9 +11,29 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
+ * yay -Sy python-conda
+ * conda create -n venv python=3.10
+ * conda activate venv
+ * git clone --recursive https://github.com/pytorch/pytorch
+ * cd pytorch
+ * git checkout tags/v1.11.0
+ * git submodule sync
+ * git submodule update --init --recursive --jobs 0
+ * export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+ * conda install astunparse numpy ninja pyyaml setuptools cmake cffi typing_extensions future six requests dataclasses
+ * conda install mkl mkl-include
+ * pacman -Q cuda
+ * conda install -c pytorch magma-cuda116
+ * python setup.py install
+ * #  vim third_party/breakpad/src/client/linux/handler/exception_handler.cc
+ * python setup.py install
+ *
+ * cd /home/nikola/projects/snakejar
+ * pip install -v /home/nikola/tmp/pydebug/pytorch/
+ *
  * @author Nikola Ivačič <nikola.ivacic@dropchop.org> on 21. 08. 22.
  */
-@Disabled
+//@Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SnakeJarIntegrationTest {
 
