@@ -5,6 +5,7 @@ import com.dropchop.snakejar.Invoker.Params;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -19,6 +20,8 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
   private final ThreadFactory threadFactory = new ThreadFactory(60, this);
 
   private final Map<String, ExecutorService> executorServiceMap = new ConcurrentHashMap<>();
+  private volatile ExecutorService firstPool = null;
+
   protected volatile State state = State.UNLOADED;
 
   SnakeJarBase() {
@@ -26,7 +29,7 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
 
   protected abstract String getDefaultThreadPoolName();
   protected abstract Params getDefaultInvokerParams();
-
+  protected abstract boolean supportsMultithreading();
   protected abstract void _load();
   protected abstract void _initialize();
   protected abstract void _destroy();
@@ -58,11 +61,60 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
   }
 
   @Override
-  public synchronized SnakeJar initialize() {
+  public synchronized SnakeJar initialize(List<Params> poolParams) {
+    if (poolParams == null || poolParams.size() <= 0) {
+      poolParams = List.of(getDefaultInvokerParams());
+    }
+    if (poolParams.size() > 1 && !this.supportsMultithreading()) {
+      throw new UnsupportedOperationException("More than one thread pool is not supported by this interpreter ["
+        + this.getInterpreter().getClass() + "]!");
+    }
+
+    for (Params params : poolParams) {
+      String poolName = params.getPoolName();
+      if (poolName == null) {
+        poolName = getDefaultThreadPoolName();
+      }
+      if (params.getNumCoreThreads() > 1 && params.getMaxThreads() > 1 && !this.supportsMultithreading()) {
+        throw new UnsupportedOperationException("More than one thread is not supported by this interpreter ["
+          + this.getInterpreter().getClass() + "]!");
+      }
+      ExecutorService pool;
+      if (params.getNumCoreThreads() == 1 && params.getMaxThreads() == 1) {
+        pool = Executors.newSingleThreadExecutor(this.threadFactory);
+        LOG.debug("Created newSingleThreadExecutor.");
+      } else {
+        BlockingQueue<Runnable> queue;
+        if (params.getNumCoreThreads() >= params.getMaxThreads()) {
+          queue = new LinkedBlockingQueue<>();
+        } else {
+          queue = new SynchronousQueue<>();
+        }
+        pool = new ThreadPoolExecutor(
+          params.getNumCoreThreads(),
+          params.getMaxThreads(),
+          params.getKeepAliveTimeout(),
+          params.getUnit(),
+          queue,
+          this.threadFactory
+        );
+        LOG.debug("Created ThreadPoolExecutor.");
+      }
+      ExecutorService tmp = executorServiceMap.computeIfAbsent(poolName, s -> pool);
+      if (tmp != pool) {
+        LOG.warn("ExecutorService with name [{}] was already created!", poolName);
+      }
+      firstPool = tmp;
+    }
+
+    if (firstPool == null) {
+      throw new RuntimeException("No thread pool was constructed for params [" + poolParams + "]!");
+    }
+
     LOG.trace("Initializing ...");
     if (this.state == State.LOADED) {
       try {
-        this._initialize();
+        firstPool.submit(SnakeJarBase.this::_initialize).get();
       } catch (Exception e) {
         throw new RuntimeException("Unable to initialize Python [" + e.getMessage() + "]!", e);
       }
@@ -72,6 +124,16 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
       LOG.trace("Skipping initialization ...");
     }
     return this;
+  }
+
+  @Override
+  public SnakeJar initialize(Params ... params) {
+    return initialize(Arrays.asList(params));
+  }
+
+  @Override
+  public SnakeJar initialize() {
+    return initialize(List.of(getDefaultInvokerParams()));
   }
 
   void shutdownPool(ExecutorService threadPool) {
@@ -100,22 +162,27 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
       this.state = State.DESTROYED;
       LOG.trace("Shutting down interpreter thread pools...");
       for (Map.Entry<String, ExecutorService> entry : this.executorServiceMap.entrySet()) {
+        if (this.firstPool == entry.getValue()) { // skip first init pool
+          continue;
+        }
         LOG.trace("Shutting down interpreter thread pool [{}] ...", entry.getKey());
         this.shutdownPool(entry.getValue());
         LOG.debug("Interpreter thread pool [{}] stopped.", entry.getKey());
       }
       this.executorServiceMap.clear();
-      LOG.debug("Interpreter thread pools stopped.");
-      //this is very important all threads must call interpreter destroy before Python cleanup
       this.threadFactory.blockUntilAllTerminated();
-      LOG.debug("Interpreter threads terminated.");
       LOG.trace("Starting Python cleanup...");
       try {
-        this._destroy();
+        this.firstPool.submit(SnakeJarBase.this::_destroy).get();
       } catch (Exception e) {
         throw new RuntimeException("Unable to destroy Python [" + e.getMessage() + "]!", e);
       }
       LOG.debug("Python cleanup done.");
+      this.shutdownPool(this.firstPool);
+      LOG.debug("Interpreter thread pools stopped.");
+      //this is very important all threads must call interpreter destroy before Python cleanup
+      this.threadFactory.blockUntilAllTerminated();
+      LOG.debug("Interpreter threads terminated.");
     } else {
       LOG.trace("Skipping destroying ...");
     }
@@ -139,77 +206,33 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
     return this;
   }
 
-  public Invoker prep(String poolName, Params params, List<Source<?>> sources) throws ExecutionException, InterruptedException {
+  public Invoker prep(String poolName, List<Source<?>> sources) throws ExecutionException, InterruptedException {
     LOG.trace("Preparing ...");
     if (poolName == null) {
       poolName = getDefaultThreadPoolName();
     }
-
-    ExecutorService pool;
-    if (params.getNumCoreThreads() == 1 && params.getMaxThreads() == 1) {
-      pool = executorServiceMap.computeIfAbsent(poolName,
-        s -> Executors.newSingleThreadExecutor(this.threadFactory)
-      );
-      LOG.debug("Created newSingleThreadExecutor.");
-    } else {
-      pool = executorServiceMap.computeIfAbsent(poolName,
-        s -> {
-          BlockingQueue<Runnable> queue;
-          if (params.getNumCoreThreads() >= params.getMaxThreads()) {
-            queue = new LinkedBlockingQueue<>();
-          } else {
-            queue = new SynchronousQueue<>();
-          }
-          return new ThreadPoolExecutor(
-            params.getNumCoreThreads(),
-            params.getMaxThreads(),
-            params.getKeepAliveTimeout(),
-            params.getUnit(),
-            queue,
-            this.threadFactory
-          );
-        }
-      );
-      LOG.debug("Created ThreadPoolExecutor.");
+    ExecutorService pool = executorServiceMap.get(poolName);
+    if (pool == null) {
+      throw new ExecutionException("Missing pool with name [" + poolName + "] initialization is wrong!",
+        new IllegalArgumentException("Missing pool name"));
     }
     new CompileInvoker(this, pool, sources).apply((Invocation<?>)null, null).get();
-
     LOG.trace("Prepared [{}].", this.executorServiceMap);
     return new Invoker(this, pool);
   }
 
   @Override
-  public Invoker prep(String poolName, Params params, Source<?> source) throws ExecutionException, InterruptedException {
-    return prep(poolName, params, List.of(source));
-  }
-
-  @Override
-  public Invoker prep(String poolName, List<Source<?>> sources) throws ExecutionException, InterruptedException {
-    return prep(poolName, getDefaultInvokerParams(), sources);
-  }
-
-  @Override
   public Invoker prep(String poolName, Source<?> source) throws ExecutionException, InterruptedException {
-    return prep(poolName, getDefaultInvokerParams(), List.of(source));
-  }
-
-  @Override
-  public com.dropchop.snakejar.Invoker prep(Params params, List<Source<?>> sources) throws ExecutionException, InterruptedException {
-    return prep(getDefaultThreadPoolName(), params, sources);
-  }
-
-  @Override
-  public com.dropchop.snakejar.Invoker prep(Params params, Source<?> source) throws ExecutionException, InterruptedException {
-    return prep(getDefaultThreadPoolName(), params, source);
+    return prep(poolName, List.of(source));
   }
 
   @Override
   public Invoker prep(List<Source<?>> sources) throws ExecutionException, InterruptedException {
-    return prep(getDefaultThreadPoolName(), getDefaultInvokerParams(), sources);
+    return prep(getDefaultThreadPoolName(), sources);
   }
 
   @Override
   public Invoker prep(Source<?> source) throws ExecutionException, InterruptedException {
-    return prep(getDefaultThreadPoolName(), getDefaultInvokerParams(), List.of(source));
+    return prep(getDefaultThreadPoolName(), List.of(source));
   }
 }

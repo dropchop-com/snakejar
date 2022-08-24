@@ -173,12 +173,14 @@ public class Example {
   public static void main(String[] args) throws Exception {
     SnakeJar snakeJar = SnakeJarFactory.get("com.dropchop.snakejar.impl.SnakeJarEmbedded");
     snakeJar.load();
-    snakeJar.initialize();
+    snakeJar.initialize(
+      new Invoker.Params("test_thread_pool", 1, 1)
+    );
 
     int numCalls = 20000;
 
     Invoker funcInvoker = snakeJar.prep(
-      "test_thread_pool", new Invoker.Params(1, 1), LANG_ID_FUNC_SOURCES
+      "test_thread_pool", LANG_ID_FUNC_SOURCES
     );
     Invoker paramsInvoker = snakeJar.prep(PARAMS_FUNC_SOURCES);
     Invoker classInvoker = snakeJar.prep(LANG_ID_CLASS_SOURCES);

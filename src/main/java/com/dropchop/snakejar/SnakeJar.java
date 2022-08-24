@@ -33,21 +33,18 @@ public interface SnakeJar {
   }
 
   SnakeJar load();
+  SnakeJar initialize(List<Params> poolParams);
+  SnakeJar initialize(Params ... params);
   SnakeJar initialize();
-  SnakeJar destroy();
-  SnakeJar unload();
 
-  Invoker prep(String poolName, Params params, List<Source<?>> sources) throws ExecutionException, InterruptedException;
+  @SuppressWarnings("UnusedReturnValue")
+  SnakeJar destroy();
+  @SuppressWarnings("UnusedReturnValue")
+  SnakeJar unload();
 
   Invoker prep(String poolName, List<Source<?>> sources) throws ExecutionException, InterruptedException;
 
-  Invoker prep(String poolName, Params params, Source<?> source) throws ExecutionException, InterruptedException;
-
   Invoker prep(String poolName, Source<?> source) throws ExecutionException, InterruptedException;
-
-  Invoker prep(Params params, List<Source<?>> sources) throws ExecutionException, InterruptedException;
-
-  Invoker prep(Params params, Source<?> source) throws ExecutionException, InterruptedException;
 
   Invoker prep(List<Source<?>> sources) throws ExecutionException, InterruptedException;
 

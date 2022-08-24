@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Nikola Ivačič <nikola.ivacic@dropchop.org> on 21. 08. 22.
  */
-//@Disabled
+@Disabled
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SnakeJarIntegrationTest {
 
@@ -64,14 +64,14 @@ public class SnakeJarIntegrationTest {
     );
 
     long time = System.currentTimeMillis();
-    /*invoker.apply(
+    invoker.apply(
       new ModelReloadFunction("fasttext-lid"),
       () -> new Object[]{"wiki-compressed", "models/fasttext-lid/lid.176.ftz.wiki.fasttext"}
     ).get();
     invoker.apply(
       new ModelReloadFunction("cclassla"),
       () -> new Object[]{"sl-standard", "models/classla"}
-    ).get();*/
+    ).get();
     invoker.apply(
       new ModelReloadFunction("sstanza"),
       () -> new Object[]{"sl-ssj", "models/stanza"}

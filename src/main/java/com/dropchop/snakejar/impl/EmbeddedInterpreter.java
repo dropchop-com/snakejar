@@ -33,6 +33,11 @@ public class EmbeddedInterpreter implements com.dropchop.snakejar.Interpreter {
   protected native void _compile(String moduleName, String fileName, String moduleSource);
   protected native void _free_module(String moduleName, ByteBuffer module);
 
+  @Override
+  public boolean supportsMultithreading() {
+    return false;
+  }
+
   synchronized void reset() {
     LOG.trace("Resetting interpreter...");
     Map<String, ByteBuffer> modules = new HashMap<>(this.compiledModules);

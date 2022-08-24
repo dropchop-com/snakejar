@@ -206,7 +206,7 @@ model {
           cCompiler.args '-I', "${Jvm.current().javaHome}/include"
           cCompiler.args '-I', "${Jvm.current().javaHome}/include/linux"
           cCompiler.args '-I', pyIncludeDir
-          // cCompiler.args '-g' // for debug
+          cCompiler.args '-g' // for debug
           cCompiler.args '-D_FILE_OFFSET_BITS=64'
           cCompiler.args '-DJEP_NUMPY_ENABLED=0'
           linker.args "-lpython${python_version}"

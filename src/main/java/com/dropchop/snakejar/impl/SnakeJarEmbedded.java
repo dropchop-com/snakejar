@@ -43,29 +43,19 @@ public class SnakeJarEmbedded extends SnakeJarBase {
   public static final String PY_VER_SYS_PROP = "snakejar.python.version";
   public static final String PY_LIB_SYS_PROP = "snakejar.pylib.location";
 
-  /*
-  protected static final ThreadLocal<Interpreter> interpreter = ThreadLocal.withInitial(() -> {
-    LOG.trace("Interpreter creating...");
-    Interpreter interpreter = null;
-    try {
-      interpreter = new EmbeddedInterpreter();
-      LOG.debug("Interpreter created.");
-    } catch (Exception e) {
-      LOG.debug("Unable to create interpreter.", e);
-    }
-    return interpreter;
-  });
-  */
   private final EmbeddedInterpreter embeddedInterpreter = new EmbeddedInterpreter();
 
   SnakeJarEmbedded() {
   }
 
-
-
   @Override
   public com.dropchop.snakejar.Interpreter getInterpreter() {
     return embeddedInterpreter;
+  }
+
+  @Override
+  protected boolean supportsMultithreading() {
+    return embeddedInterpreter.supportsMultithreading();
   }
 
   @Override
@@ -82,7 +72,7 @@ public class SnakeJarEmbedded extends SnakeJarBase {
 
   @Override
   protected Invoker.Params getDefaultInvokerParams() {
-    return new Invoker.Params(1, 1, 300L, TimeUnit.SECONDS);
+    return new Invoker.Params(getDefaultThreadPoolName(), 1, 1, 300L, TimeUnit.SECONDS);
   }
 
   protected static PythonEnvironment getPythonEnvironment(boolean forceFromProgram) {

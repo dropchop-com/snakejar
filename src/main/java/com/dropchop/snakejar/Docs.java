@@ -50,7 +50,7 @@ class Docs {
     // In native code we try to find and load Python's library
     // based on invoking Python executable.
     snakeJar.load();
-    // Initialize Python interpreter and SnakeJar internal state.
+    // Initialize Python interpreter and SnakeJar internal state with optional thread pool parameters.
     // Again we detect Python's path in JNI lib by invoking actual python,
     // so any Python environment settings should work.
     snakeJar.initialize();
@@ -59,7 +59,12 @@ class Docs {
   private static void prepare() throws Exception {
     SnakeJar snakeJar = SnakeJarFactory
       .get("com.dropchop.snakejar.impl.SnakeJarEmbedded")
-      .load().initialize();
+      .load()
+      .initialize(
+        // Thread pool name, num core threads and max threads in thread pool.
+        // (More than one in embedded CPython will produce exception)
+        new Invoker.Params("my_thread_pool", 1, 1)
+      );
 
     // We prepare the code to load in to Python interpreter.
     // Currently the interpreter is invoked from single thread,
@@ -72,10 +77,6 @@ class Docs {
     Invoker myFuncInvoker = snakeJar.prep(
       // Thread pool name.
       "my_thread_pool",
-      // Num core threads and max threads in thread pool.
-      // (More than one in embedded CPython makes little sense
-      // since performance might only degrade)
-      new Invoker.Params(1, 1),
       // We can define an ordered list of sources to compile
       List.of(
         new ModuleSource<>(

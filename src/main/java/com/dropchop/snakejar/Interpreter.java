@@ -9,6 +9,8 @@ import java.util.Map;
  */
 public interface Interpreter {
 
+  boolean supportsMultithreading();
+
   void compile(List<Source<?>> sources) throws IOException;
 
   <V> V invoke(String moduleName, String functionName,

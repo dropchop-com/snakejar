@@ -83,7 +83,7 @@ static bool pre_init(JNIEnv *env) {
 }
 
 JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initialize(JNIEnv *env, jobject obj) {
-  PyThreadState *tstate;
+  PyThreadState *tstate, *main_tstate;
   PyGILState_STATE gil;
   PyObject *module;
 
@@ -103,23 +103,26 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
   if (!cache_primitive_classes(env)) {
     sj_jlog_warn(env, L"Unable to cache primitive classes!");
   }
-  tstate = PyEval_SaveThread();
-  sj_set_main_thread_state(tstate);
-  sj_jlog_info(env, L"Initialized Python with thread state [%p].", tstate);
-  // PyEval_ReleaseLock();
+  tstate = PyThreadState_Get();
+  main_tstate = PyEval_SaveThread();
+  sj_set_main_thread_state(main_tstate);
+#if PY_VERSION_HEX >= 0x03090000
+    sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
+      main_tstate, PyThreadState_GetID(main_tstate), tstate, PyThreadState_GetID(tstate));
+#else
+    sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
+#endif
+  sj_jlog_info(env, L"Initialized Python with thread state [%p].", main_tstate);
 }
 
 JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1destroy(JNIEnv *env, jobject obj) {
   PyGILState_STATE gil;
-  PyThreadState *tstate;
 
   sj_jlog_debug(env, L"Python cleanup start...");
   if (Py_IsInitialized()) {
     gil = PyGILState_Ensure();
-    tstate = PyThreadState_Get();
-    PyGILState_Release(gil);
-    PyEval_RestoreThread(tstate);
     Py_FinalizeEx();
+    //PyGILState_Release(gil);
   }
   sj_jlog_info(env, L"Python cleanup done.");
 }

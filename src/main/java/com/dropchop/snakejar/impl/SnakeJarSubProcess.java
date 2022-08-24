@@ -16,6 +16,12 @@ public class SnakeJarSubProcess extends SnakeJarBase {
     return null;
   }
 
+
+  @Override
+  protected boolean supportsMultithreading() {
+    return true;
+  }
+
   @Override
   public void destroyInterpreter(Interpreter interpreter) {
 

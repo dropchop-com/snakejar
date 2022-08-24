@@ -9,24 +9,34 @@ import java.util.concurrent.TimeUnit;
 public interface Invoker {
 
   class Params {
+    final String poolName;
     final int numCoreThreads;
     final int maxThreads;
     final long keepAliveTimeout;
     final TimeUnit unit;
 
-    public Params(int numCoreThreads, int maxThreads, long keepAliveTimeout, TimeUnit unit) {
+    public Params(String poolName, int numCoreThreads, int maxThreads, long keepAliveTimeout, TimeUnit unit) {
+      this.poolName = poolName;
       this.numCoreThreads = numCoreThreads;
       this.maxThreads = maxThreads;
       this.keepAliveTimeout = keepAliveTimeout;
       this.unit = unit;
     }
 
+    public Params(String poolName, int numCoreThreads, int maxThreads) {
+      this(poolName, numCoreThreads, maxThreads, 300L, TimeUnit.SECONDS);
+    }
+
     public Params(int numCoreThreads, int maxThreads) {
-      this(numCoreThreads, maxThreads, 300L, TimeUnit.SECONDS);
+      this(null, numCoreThreads, maxThreads, 300L, TimeUnit.SECONDS);
     }
 
     public Params() {
-      this(5, 10, 300L, TimeUnit.SECONDS);
+      this(null, 5, 10, 300L, TimeUnit.SECONDS);
+    }
+
+    public String getPoolName() {
+      return poolName;
     }
 
     public int getNumCoreThreads() {

@@ -17,26 +17,6 @@ public class SnakeJarFactory {
   private static final Logger LOG = LoggerFactory.getLogger(SnakeJar.class);
   private static final Map<String, SnakeJar> instances = new HashMap<>();
 
-  /*static {
-    synchronized(ClassLoader.getSystemClassLoader()) {
-      LOG.trace("Loading SnakeJarFactory instance with [{}]", Thread.currentThread().getContextClassLoader());
-      Properties sysProps = System.getProperties();
-      SnakeJarFactory singleton = (SnakeJarFactory) sysProps.get(SnakeJarFactory.class.getName());
-
-      if (singleton != null) {
-        INSTANCE = singleton;
-        LOG.debug("Loaded SnakeJarFactory instance from properties with [{}]",
-          Thread.currentThread().getContextClassLoader());
-      } else {
-        INSTANCE = new SnakeJarFactory();
-        System.getProperties().put(SnakeJarFactory.class.getName(), INSTANCE);
-        LOG.debug("Created SnakeJarFactory instance with [{}] from [{}]",
-          INSTANCE.getClass().getClassLoader(),
-          Thread.currentThread().getContextClassLoader());
-      }
-    }
-  }*/
-
   public static SnakeJar get(String className) {
     return instances.computeIfAbsent(className, n -> {
       synchronized(ClassLoader.getSystemClassLoader()) {

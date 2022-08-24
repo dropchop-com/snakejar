@@ -11,11 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ThreadFactory implements java.util.concurrent.ThreadFactory {
 
-  final Logger log = LoggerFactory.getLogger(ThreadFactory.class);
-
+  private final Logger log = LoggerFactory.getLogger(ThreadFactory.class);
   private static final long SLEEP_INTERVAL = 50;
   private static final AtomicInteger nextId  = new AtomicInteger(0);
-
   private final AtomicInteger counter = new AtomicInteger(0);
   private final long terminationTimeout;
   private final InterpreterFactory interpreterFactory;
@@ -51,6 +49,7 @@ public class ThreadFactory implements java.util.concurrent.ThreadFactory {
     long numRuns = 0;
     while (!allThreadsTerminated()) {
       try {
+        //noinspection BusyWait
         Thread.sleep(SLEEP_INTERVAL);
         numRuns++;
       } catch (InterruptedException ignored) {
