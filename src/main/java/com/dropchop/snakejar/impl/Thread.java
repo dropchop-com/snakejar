@@ -1,7 +1,5 @@
 package com.dropchop.snakejar.impl;
 
-import com.dropchop.snakejar.Interpreter;
-import com.dropchop.snakejar.InterpreterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +15,8 @@ public class Thread extends java.lang.Thread {
     this.threadFactory = threadFactory;
   }
 
+  /*
+
   @Override
   public void run() {
     log.trace("Running thread...");
@@ -25,7 +25,7 @@ public class Thread extends java.lang.Thread {
     } finally {
       log.debug("Stopping thread.");
       log.trace("Destroying interpreter.");
-      InterpreterFactory interpreterFactory = threadFactory.getInterpreterFactory();
+      InterpreterProvider interpreterFactory = threadFactory.getInterpreterFactory();
       Interpreter interpreter = interpreterFactory.getInterpreter();
       try {
         interpreterFactory.destroyInterpreter(interpreter);
@@ -36,4 +36,5 @@ public class Thread extends java.lang.Thread {
       log.debug("Stopped thread.");
     }
   }
+  */
 }

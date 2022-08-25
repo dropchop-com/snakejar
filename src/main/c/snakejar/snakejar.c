@@ -93,10 +93,10 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
     return;
   }
   Py_InitializeEx(0);//initialize with no signal handlers and get GIL
-  module = PyImport_ImportModule("threading"); //needed for graceful destroy and correct threading init
+  //module = PyImport_ImportModule("threading"); //needed for graceful destroy and correct threading init
   //PyRun_SimpleString("def __neki:\n\tpass:\n"
   //					"thread = threading.Thread(target=__neki, args=())\nthread.start()\nthread.join()");
-  Py_XDECREF(module);
+  //Py_XDECREF(module);
   if (!cache_frequent_classes(env)) {
     sj_jlog_warn(env, L"Unable to cache frequent classes!");
   }

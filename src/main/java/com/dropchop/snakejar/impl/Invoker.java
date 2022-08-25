@@ -5,7 +5,6 @@ import com.dropchop.snakejar.maybe.not.ObjectInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -17,15 +16,15 @@ public class Invoker implements com.dropchop.snakejar.Invoker {
   private static final Logger LOG = LoggerFactory.getLogger(Invoker.class);
 
   private final ExecutorService service;
-  private final InterpreterFactory interpreterFactory;
+  private final InterpreterProvider interpreterProvider;
 
-  public Invoker(InterpreterFactory interpreterFactory, ExecutorService service) {
-    this.interpreterFactory = interpreterFactory;
+  public Invoker(InterpreterProvider interpreterProvider, ExecutorService service) {
+    this.interpreterProvider = interpreterProvider;
     this.service = service;
   }
 
-  protected InterpreterFactory getInterpreterFactory() {
-    return interpreterFactory;
+  protected InterpreterProvider getInterpreterFactory() {
+    return interpreterProvider;
   }
 
   protected ExecutorService getService() {
@@ -36,10 +35,10 @@ public class Invoker implements com.dropchop.snakejar.Invoker {
   public <X, V> Future<V> apply(InvocationSupplier<V> invocationSupplier, Arg<X> argSupplier, KwArg kwSupplier) {
     return this.getService().submit(
       () -> {
-        InterpreterFactory interpreterFactory = getInterpreterFactory();
-        LOG.trace("Get interpreter from [{}]...", interpreterFactory);
-        com.dropchop.snakejar.Interpreter interpreter = interpreterFactory.getInterpreter();
-        LOG.trace("Got interpreter from [{}].", interpreterFactory);
+        InterpreterProvider interpreterProvider = getInterpreterFactory();
+        LOG.trace("Get interpreter from [{}]...", interpreterProvider);
+        com.dropchop.snakejar.Interpreter interpreter = interpreterProvider.getInterpreter();
+        LOG.trace("Got interpreter from [{}].", interpreterProvider);
         Invocation<V> invocation = invocationSupplier.get();
         X args = argSupplier.get();
         Object[] argsObjects;

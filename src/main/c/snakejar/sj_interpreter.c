@@ -98,7 +98,7 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1com
       PyErr_Print();
       err = true;
     } else {
-      sj_jlog_debug(env, L"Imported module [%hs].", m_name ? m_name : "NULL");
+      sj_jlog_debug(env, L"Imported module [%hs][%p].", m_name ? m_name : "NULL", pyModule);
     }
   }
 
@@ -127,7 +127,7 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1fre
   }
 
   pyModule = (PyObject*) (*env)->GetDirectBufferAddress(env, module);
-  if (pyModule != NULL && !_Py_IsFinalizing()) {
+  if (pyModule != NULL /*&& !_Py_IsFinalizing()*/) {
     sj_jlog_debug(env, L"Found module [%hs][%p] for release.", m_name ? m_name : "NULL", pyModule);
     gil_state = PyGILState_Ensure();
     Py_XDECREF(pyModule);

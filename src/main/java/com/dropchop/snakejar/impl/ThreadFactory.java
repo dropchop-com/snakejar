@@ -1,6 +1,6 @@
 package com.dropchop.snakejar.impl;
 
-import com.dropchop.snakejar.InterpreterFactory;
+import com.dropchop.snakejar.InterpreterProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,25 +16,18 @@ public class ThreadFactory implements java.util.concurrent.ThreadFactory {
   private static final AtomicInteger nextId  = new AtomicInteger(0);
   private final AtomicInteger counter = new AtomicInteger(0);
   private final long terminationTimeout;
-  private final InterpreterFactory interpreterFactory;
-
-  public ThreadFactory(long terminationTimeout, InterpreterFactory interpreterFactory) {
+  public ThreadFactory(long terminationTimeout) {
     this.terminationTimeout = terminationTimeout;
-    this.interpreterFactory = interpreterFactory;
   }
 
   @Override
   public Thread newThread(Runnable runnable) {
     String name = "SnakeJar-" + nextId.getAndIncrement();
-    log.trace("Creating [{}] thread [{}]...", interpreterFactory, name);
+    log.trace("Creating thread [{}]...", name);
     Thread thread = new Thread(this, runnable, name);
     counter.incrementAndGet();
-    log.debug("Created [{}] thread [{}].", interpreterFactory, name);
+    log.debug("Created thread [{}].", name);
     return thread;
-  }
-
-  public InterpreterFactory getInterpreterFactory() {
-    return interpreterFactory;
   }
 
   protected void signalTermination() {

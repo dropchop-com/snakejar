@@ -25,6 +25,18 @@ public class EmbeddedInterpreter implements com.dropchop.snakejar.Interpreter {
   private static final String PREFIX_CP = "classpath://";
   private static final int PREFIX_CP_LEN = PREFIX_CP.length();
 
+  private static final char[] HEX_CODE = "0123456789abcdef".toCharArray();
+
+  public static String toHexString(ByteBuffer buffer) {
+    final StringBuilder r = new StringBuilder(buffer.remaining() * 2);
+    while (buffer.hasRemaining()) {
+      final byte b = buffer.get();
+      r.append(HEX_CODE[(b >> 4) & 0xF]);
+      r.append(HEX_CODE[(b & 0xF)]);
+    }/*w ww .j av  a2s .  c o m*/
+    return r.toString();
+  }
+
   EmbeddedInterpreter() {
   }
 
@@ -38,19 +50,22 @@ public class EmbeddedInterpreter implements com.dropchop.snakejar.Interpreter {
     return false;
   }
 
-  synchronized void reset() {
+  synchronized void releaseModules() {
     LOG.trace("Resetting interpreter...");
     Map<String, ByteBuffer> modules = new HashMap<>(this.compiledModules);
     this.compiledModules.clear();
     for (Map.Entry<String, ByteBuffer> modEntry : modules.entrySet()) {
+      LOG.debug("Releasing compiled module [{}]...", modEntry.getKey());
       this._free_module(modEntry.getKey(), modEntry.getValue());
+      LOG.debug("Released compiled module [{}].", modEntry.getKey());
     }
     LOG.debug("Interpreter reset.");
   }
 
   protected void registerCompiledModule(String moduleName, ByteBuffer compiledModulePtr) {
-    LOG.trace("Registering compiled module [{}]...", moduleName);
+    LOG.debug("Registering compiled module [{}]...", moduleName);
     this.compiledModules.put(moduleName, compiledModulePtr);
+    LOG.debug("Registered and compiled module [{}].", moduleName);
   }
 
   protected ByteBuffer getCompiledModule(String name) {

@@ -1,6 +1,5 @@
 package com.dropchop.snakejar.impl;
 
-import com.dropchop.snakejar.Interpreter;
 import com.dropchop.snakejar.Invoker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,13 +55,6 @@ public class SnakeJarEmbedded extends SnakeJarBase {
   @Override
   protected boolean supportsMultithreading() {
     return embeddedInterpreter.supportsMultithreading();
-  }
-
-  @Override
-  public void destroyInterpreter(Interpreter interpreter) {
-    if (interpreter instanceof EmbeddedInterpreter) {
-      ((EmbeddedInterpreter) interpreter).reset();
-    }
   }
 
   @Override
@@ -156,6 +148,11 @@ public class SnakeJarEmbedded extends SnakeJarBase {
 
   @Override
   protected native void _initialize();
+
+  @Override
+  protected void _cleanup() {
+    this.embeddedInterpreter.releaseModules();
+  }
 
   @Override
   protected native void _destroy();

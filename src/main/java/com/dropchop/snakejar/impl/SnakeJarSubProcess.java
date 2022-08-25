@@ -23,11 +23,6 @@ public class SnakeJarSubProcess extends SnakeJarBase {
   }
 
   @Override
-  public void destroyInterpreter(Interpreter interpreter) {
-
-  }
-
-  @Override
   protected String getDefaultThreadPoolName() {
     return null;
   }
@@ -44,6 +39,11 @@ public class SnakeJarSubProcess extends SnakeJarBase {
 
   @Override
   protected void _initialize() {
+
+  }
+
+  @Override
+  protected void _cleanup() {
 
   }
 

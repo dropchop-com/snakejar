@@ -17,8 +17,8 @@ public class CompileInvoker extends Invoker {
 
   private final List<Source<?>> sources;
 
-  public CompileInvoker(InterpreterFactory interpreterFactory, ExecutorService service, List<Source<?>> sources) {
-    super(interpreterFactory, service);
+  public CompileInvoker(InterpreterProvider interpreterProvider, ExecutorService service, List<Source<?>> sources) {
+    super(interpreterProvider, service);
     this.sources = sources;
   }
 
@@ -31,10 +31,10 @@ public class CompileInvoker extends Invoker {
     List<Source<?>> sources = this.getSources();
     return this.getService().submit(
       () -> {
-        InterpreterFactory interpreterFactory = getInterpreterFactory();
-        LOG.trace("Get interpreter from [{}]...", interpreterFactory);
-        com.dropchop.snakejar.Interpreter interpreter = interpreterFactory.getInterpreter();
-        LOG.trace("Got interpreter from [{}].", interpreterFactory);
+        InterpreterProvider interpreterProvider = getInterpreterFactory();
+        LOG.trace("Get interpreter from [{}]...", interpreterProvider);
+        com.dropchop.snakejar.Interpreter interpreter = interpreterProvider.getInterpreter();
+        LOG.trace("Got interpreter from [{}].", interpreterProvider);
         try {
           interpreter.compile(sources);
         } catch (Exception e) {

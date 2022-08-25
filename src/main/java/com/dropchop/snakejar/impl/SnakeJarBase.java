@@ -1,7 +1,10 @@
 package com.dropchop.snakejar.impl;
 
-import com.dropchop.snakejar.*;
+import com.dropchop.snakejar.InterpreterProvider;
+import com.dropchop.snakejar.Invocation;
 import com.dropchop.snakejar.Invoker.Params;
+import com.dropchop.snakejar.SnakeJar;
+import com.dropchop.snakejar.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,11 +16,11 @@ import java.util.concurrent.*;
 /**
  * @author Nikola Ivačič <nikola.ivacic@dropchop.org> on 29. 10. 21.
  */
-public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
+public abstract class SnakeJarBase implements SnakeJar, InterpreterProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(SnakeJarBase.class);
 
-  private final ThreadFactory threadFactory = new ThreadFactory(60, this);
+  private final ThreadFactory threadFactory = new ThreadFactory(60);
 
   private final Map<String, ExecutorService> executorServiceMap = new ConcurrentHashMap<>();
   private volatile ExecutorService firstPool = null;
@@ -32,6 +35,7 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
   protected abstract boolean supportsMultithreading();
   protected abstract void _load();
   protected abstract void _initialize();
+  protected abstract void _cleanup();
   protected abstract void _destroy();
   protected abstract void _unload();
 
@@ -172,6 +176,11 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterFactory {
       this.executorServiceMap.clear();
       this.threadFactory.blockUntilAllTerminated();
       LOG.trace("Starting Python cleanup...");
+      try {
+        this.firstPool.submit(SnakeJarBase.this::_cleanup).get();
+      } catch (Exception e) {
+        throw new RuntimeException("Unable to destroy Python [" + e.getMessage() + "]!", e);
+      }
       try {
         this.firstPool.submit(SnakeJarBase.this::_destroy).get();
       } catch (Exception e) {
