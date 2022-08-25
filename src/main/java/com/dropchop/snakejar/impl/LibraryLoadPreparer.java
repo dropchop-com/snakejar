@@ -81,6 +81,7 @@ public class LibraryLoadPreparer {
     throw new UnsupportedOperationException();
   }
 
+  @SuppressWarnings("unused")
   public static String getLibraryFileName(final String name, final String pythonVersion) {
     return  getLibraryBaseName(name, pythonVersion) + osExtension();
   }
@@ -95,6 +96,7 @@ public class LibraryLoadPreparer {
     }
   }
 
+  @SuppressWarnings("SameParameterValue")
   static File fromJarToTemp(final String baseName, final String pythonVersion, final ClassLoader classLoader)
     throws IOException {
     final File temp;

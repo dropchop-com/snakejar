@@ -32,6 +32,7 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterProvider {
 
   protected abstract String getDefaultThreadPoolName();
   protected abstract Params getDefaultInvokerParams();
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   protected abstract boolean supportsMultithreading();
   protected abstract void _load();
   protected abstract void _initialize();
@@ -43,6 +44,7 @@ public abstract class SnakeJarBase implements SnakeJar, InterpreterProvider {
     return this.state.atLeast(State.LOADED);
   }
 
+  @SuppressWarnings("unused")
   public boolean isInitialized() {
     return this.state.atLeast(State.READY);
   }

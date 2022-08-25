@@ -234,6 +234,7 @@ model {
 
 nativeRun.dependsOn 'snakejarSharedLibrary'
 copyLibs.dependsOn 'snakejarSharedLibrary'
+processResources.dependsOn copyLibs
 jar.dependsOn 'copyLibs'
 run.dependsOn 'snakejarSharedLibrary'
 test.dependsOn 'snakejarSharedLibrary'

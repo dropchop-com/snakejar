@@ -1,6 +1,5 @@
 package com.dropchop.snakejar.impl;
 
-import com.dropchop.snakejar.InterpreterProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +23,13 @@ public class ThreadFactory implements java.util.concurrent.ThreadFactory {
   public Thread newThread(Runnable runnable) {
     String name = "SnakeJar-" + nextId.getAndIncrement();
     log.trace("Creating thread [{}]...", name);
-    Thread thread = new Thread(this, runnable, name);
+    Thread thread = new Thread(runnable, name);
     counter.incrementAndGet();
     log.debug("Created thread [{}].", name);
     return thread;
   }
 
+  @SuppressWarnings("unused")
   protected void signalTermination() {
     counter.decrementAndGet();
   }

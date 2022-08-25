@@ -7,19 +7,19 @@ docker build \
   --build-arg UID="$(id -u)" \
   --build-arg GID="$(id -g)" \
   -f src/main/docker/Dockerfile \
-  -t snakejar_build_20220418:latest .
+  -t snakejar_build_20220825:latest .
 
 docker run -v "$(pwd)":/build/src snakejar_build_20220418 \
-  /build/run_gradlew.sh "3.8" clean build \
+  /build/run_gradlew.sh "3.8" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"
 
 docker run -v "$(pwd)":/build/src snakejar_build_20220418 \
-  /build/run_gradlew.sh "3.9" build \
+  /build/run_gradlew.sh "3.9" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"
 
 docker run -v "$(pwd)":/build/src snakejar_build_20220418 \
-  /build/run_gradlew.sh "3.10" build \
+  /build/run_gradlew.sh "3.10" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"

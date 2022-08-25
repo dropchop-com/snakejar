@@ -25,18 +25,6 @@ public class EmbeddedInterpreter implements com.dropchop.snakejar.Interpreter {
   private static final String PREFIX_CP = "classpath://";
   private static final int PREFIX_CP_LEN = PREFIX_CP.length();
 
-  private static final char[] HEX_CODE = "0123456789abcdef".toCharArray();
-
-  public static String toHexString(ByteBuffer buffer) {
-    final StringBuilder r = new StringBuilder(buffer.remaining() * 2);
-    while (buffer.hasRemaining()) {
-      final byte b = buffer.get();
-      r.append(HEX_CODE[(b >> 4) & 0xF]);
-      r.append(HEX_CODE[(b & 0xF)]);
-    }/*w ww .j av  a2s .  c o m*/
-    return r.toString();
-  }
-
   EmbeddedInterpreter() {
   }
 
@@ -62,6 +50,7 @@ public class EmbeddedInterpreter implements com.dropchop.snakejar.Interpreter {
     LOG.debug("Interpreter reset.");
   }
 
+  @SuppressWarnings("unused")
   protected void registerCompiledModule(String moduleName, ByteBuffer compiledModulePtr) {
     LOG.debug("Registering compiled module [{}]...", moduleName);
     this.compiledModules.put(moduleName, compiledModulePtr);

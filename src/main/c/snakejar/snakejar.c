@@ -103,16 +103,15 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
   main_tstate = PyEval_SaveThread();
   sj_set_main_thread_state(main_tstate);
 #if PY_VERSION_HEX >= 0x03090000
-  sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
+  sj_jlog_info(env, L"Initialized Python with PyThreadState main [%p::%d] current [%p::%d].",
     main_tstate,
     main_tstate ? PyThreadState_GetID(main_tstate) : "NULL",
     tstate,
     tstate ? PyThreadState_GetID(tstate) : "NULL"
   );
 #else
-  sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
+  sj_jlog_info(env, L"Initialized Python with PyThreadState main [%p] current [%p].", main_tstate, tstate);
 #endif
-  sj_jlog_info(env, L"Initialized Python with thread state [%p].", main_tstate);
 }
 
 JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1destroy(JNIEnv *env, jobject obj) {
