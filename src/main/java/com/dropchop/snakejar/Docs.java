@@ -53,7 +53,11 @@ class Docs {
     // Initialize Python interpreter and SnakeJar internal state with optional thread pool parameters.
     // Again we detect Python's path in JNI lib by invoking actual python,
     // so any Python environment settings should work.
-    snakeJar.initialize();
+    snakeJar.initialize(
+      // Thread pool name, num core threads and max threads in thread pool.
+      // (More than one in embedded CPython will produce exception)
+      new Invoker.Params("my_thread_pool", 1, 1)
+    );
   }
 
   private static void prepare() throws Exception {
@@ -72,8 +76,7 @@ class Docs {
     // would need more threads, hence we can define the thread-pool
     // for the interpreter.
 
-    // We can define as many invokers as we wish - binding them to
-    // any thread-pool:
+    // We can define as many invokers as we wish - to run on any initialized thread-pool:
     Invoker myFuncInvoker = snakeJar.prep(
       // Thread pool name.
       "my_thread_pool",
@@ -141,10 +144,12 @@ class Docs {
     SnakeJar snakeJar = SnakeJarFactory
       .get("com.dropchop.snakejar.impl.SnakeJarEmbedded")
       .load().initialize();
-    // We stop all thread pools and wait for termination.
-    // We wait for all threads in all thread pools to terminate
+    // We stop all thread pools except first and wait for termination.
+    // We wait for threads in all thread pools except first to terminate
+    // We release all compiled Python modules.
     // We release the Python interpreter.
-    // I some situations you can call initialize() and destroy()
+    // We stop first thread pool and wait for termination.
+    // In some situations you can call initialize() and destroy()
     // multiple times just fine.
     // This depends on which Python extensions you are using
     // and how are their "process global" variables managed.

@@ -93,10 +93,6 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
     return;
   }
   Py_InitializeEx(0);//initialize with no signal handlers and get GIL
-  //module = PyImport_ImportModule("threading"); //needed for graceful destroy and correct threading init
-  //PyRun_SimpleString("def __neki:\n\tpass:\n"
-  //					"thread = threading.Thread(target=__neki, args=())\nthread.start()\nthread.join()");
-  //Py_XDECREF(module);
   if (!cache_frequent_classes(env)) {
     sj_jlog_warn(env, L"Unable to cache frequent classes!");
   }
@@ -107,10 +103,14 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_SnakeJarEmbedded__1initia
   main_tstate = PyEval_SaveThread();
   sj_set_main_thread_state(main_tstate);
 #if PY_VERSION_HEX >= 0x03090000
-    sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
-      main_tstate, PyThreadState_GetID(main_tstate), tstate, PyThreadState_GetID(tstate));
+  sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
+    main_tstate,
+    main_tstate ? PyThreadState_GetID(main_tstate) : "NULL",
+    tstate,
+    tstate ? PyThreadState_GetID(tstate) : "NULL"
+  );
 #else
-    sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
+  sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
 #endif
   sj_jlog_info(env, L"Initialized Python with thread state [%p].", main_tstate);
 }

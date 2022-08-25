@@ -76,10 +76,14 @@ JNIEXPORT void JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1com
   main_tstate = sj_get_main_thread_state();
   tstate = PyThreadState_Get();
 #if PY_VERSION_HEX >= 0x03090000
-    sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
-      main_tstate, PyThreadState_GetID(main_tstate), tstate, PyThreadState_GetID(tstate));
+  sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
+    main_tstate,
+    main_tstate ? PyThreadState_GetID(main_tstate) : "NULL",
+    tstate,
+    tstate ? PyThreadState_GetID(tstate) : "NULL"
+  );
 #else
-    sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
+  sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
 #endif
 
   pyCode = Py_CompileString(m_src, f_name, Py_file_input);
@@ -164,7 +168,11 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
     tstate = PyThreadState_Get();
 #if PY_VERSION_HEX >= 0x03090000
     sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
-      main_tstate, PyThreadState_GetID(main_tstate), tstate, PyThreadState_GetID(tstate));
+      main_tstate,
+      main_tstate ? PyThreadState_GetID(main_tstate) : "NULL",
+      tstate,
+      tstate ? PyThreadState_GetID(tstate) : "NULL"
+    );
 #else
     sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
 #endif
@@ -227,7 +235,11 @@ JNIEXPORT jobject JNICALL Java_com_dropchop_snakejar_impl_EmbeddedInterpreter__1
     tstate = PyThreadState_Get();
 #if PY_VERSION_HEX >= 0x03090000
     sj_jlog_debug(env, L"PyThreadState main [%p::%d] current [%p::%d].",
-      main_tstate, PyThreadState_GetID(main_tstate), tstate, PyThreadState_GetID(tstate));
+      main_tstate,
+      main_tstate ? PyThreadState_GetID(main_tstate) : "NULL",
+      tstate,
+      tstate ? PyThreadState_GetID(tstate) : "NULL"
+    );
 #else
     sj_jlog_debug(env, L"PyThreadState main [%p] current [%p].", main_tstate, tstate);
 #endif
