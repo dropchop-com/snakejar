@@ -1,212 +1,333 @@
 [
 {
-  "name":"boolean[]"
+  "name":"boolean[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"byte[]"
+  "name":"byte[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"char[]"
+  "name":"char[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"com.dropchop.snakejar.embed.JepException", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+  "name":"com.dropchop.snakejar.embed.JepException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"com.dropchop.snakejar.embed.Proxy"
+  "name":"com.dropchop.snakejar.embed.Proxy",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"com.dropchop.snakejar.embed.python.PyCallable"
+  "name":"com.dropchop.snakejar.embed.python.PyCallable",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"com.dropchop.snakejar.embed.python.PyObject"
+  "name":"com.dropchop.snakejar.embed.python.PyObject",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"com.dropchop.snakejar.impl.EmbeddedInterpreter", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+  "name":"com.dropchop.snakejar.impl.EmbeddedInterpreter",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"double[]"
+  "name":"com.dropchop.snakejar.impl.CompileInvoker",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"float[]"
+  "name":"com.dropchop.snakejar.impl.EmbeddedInterpreter",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"int[]"
+  "name":"com.dropchop.snakejar.impl.Invoker",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.io.IOException"
+  "name":"com.dropchop.snakejar.impl.LibraryLoadPreparer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.ArithmeticException"
+  "name":"com.dropchop.snakejar.impl.SnakeJarBase",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.AssertionError"
+  "name":"com.dropchop.snakejar.impl.SnakeJarEmbedded",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.AutoCloseable"
+  "name":"com.dropchop.snakejar.impl.SnakeJarFactory",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Boolean"
+  "name":"com.dropchop.snakejar.impl.SnakeJarSubProcess",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Byte"
+  "name":"com.dropchop.snakejar.impl.ThreadFactory",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Character"
+  "name":"java.io.FilePermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.RuntimePermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.net.NetPermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.net.SocketPermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.net.URLPermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.security.AllPermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.security.SecurityPermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.util.PropertyPermission",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"double[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"float[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"int[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.io.IOException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.ArithmeticException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.AssertionError",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.AutoCloseable",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.Boolean",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.Byte",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.lang.Character",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.Class",
-  "methods":[{"name":"getComponentType","parameterTypes":[] }]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.ClassCastException"
+  "name":"java.lang.ClassCastException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.ClassLoader",
-  "methods":[
-    {"name":"getPlatformClassLoader","parameterTypes":[] },
-    {"name":"loadClass","parameterTypes":["java.lang.String"] }
-  ]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.ClassNotFoundException"
+  "name":"java.lang.ClassNotFoundException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Comparable"
+  "name":"java.lang.Comparable",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.Double",
-  "methods":[{"name":"<init>","parameterTypes":["double"] }]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Float"
+  "name":"java.lang.Float",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.IllegalArgumentException"
+  "name":"java.lang.IllegalArgumentException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.IndexOutOfBoundsException"
+  "name":"java.lang.IndexOutOfBoundsException",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Integer"
+  "name":"java.lang.Integer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.Iterable",
-  "methods":[{"name":"iterator","parameterTypes":[] }]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Long"
+  "name":"java.lang.Long",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.Number",
-  "methods":[{"name":"intValue","parameterTypes":[] }]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Object"
+  "name":"java.lang.Object",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.OutOfMemoryError"
+  "name":"java.lang.OutOfMemoryError",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Short"
+  "name":"java.lang.Short",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.String"
+  "name":"java.lang.String",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.Throwable"
+  "name":"java.lang.Throwable",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.Thread", "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.lang.Void",
-  "fields":[{"name":"TYPE"}]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.reflect.Constructor"
+  "name":"java.lang.reflect.Constructor",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.reflect.Field"
+  "name":"java.lang.reflect.Field",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.reflect.Member"
+  "name":"java.lang.reflect.Member",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.reflect.Method"
+  "name":"java.lang.reflect.Method",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.reflect.Modifier"
+  "name":"java.lang.reflect.Modifier",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.lang.reflect.Proxy"
+  "name":"java.lang.reflect.Proxy",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.math.BigInteger"
+  "name":"java.math.BigInteger",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.Buffer"
+  "name":"java.nio.Buffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.ByteBuffer"
+  "name":"java.nio.ByteBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.ByteOrder"
+  "name":"java.nio.ByteOrder",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.CharBuffer"
+  "name":"java.nio.CharBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.DoubleBuffer"
+  "name":"java.nio.DoubleBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.FloatBuffer"
+  "name":"java.nio.FloatBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.IntBuffer"
+  "name":"java.nio.IntBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.LongBuffer"
+  "name":"java.nio.LongBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.nio.ShortBuffer"
+  "name":"java.nio.ShortBuffer",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.util.ArrayList"
+  "name":"java.util.ArrayList",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.util.Collection"
+  "name":"java.util.Collection",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.util.Collections"
+  "name":"java.util.Collections",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.util.HashMap",
-  "methods":[{"name":"<init>","parameterTypes":["int"] }]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
+},
+{
+  "name":"java.util.LinkedHashMap",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.util.Iterator",
-  "methods":[{"name":"hasNext","parameterTypes":[] }]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.util.List"
+  "name":"java.util.List",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
   "name":"java.util.Map",
-  "methods":[
-    {"name":"entrySet","parameterTypes":[] },
-    {"name":"put","parameterTypes":["java.lang.Object","java.lang.Object"] }
-  ]
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"java.util.Map$Entry"
+  "name":"java.util.Map$Entry",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader"
+  "name":"jdk.internal.loader.ClassLoaders$PlatformClassLoader",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"long[]"
+  "name":"long[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 },
 {
-  "name":"short[]"
+  "name":"short[]",
+  "allDeclaredConstructors": true, "allPublicConstructors": true, "allDeclaredMethods": true, "allPublicMethods": true, "allDeclaredClasses": true, "allPublicClasses": true, "allDeclaredFields": true, "allPublicFields": true
 }
 ]
