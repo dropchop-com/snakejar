@@ -403,47 +403,52 @@ int process_java_exception(JNIEnv *env)
         return 0;
     }
 
-    if ((exception = (*env)->ExceptionOccurred(env)) == NULL) {
-        return 0;
-    }
-
-    if (PyErr_Occurred()) {
-        /*
-         * There's a bug in Jep somewhere, hopefully this printout will help
-         * diagnose it.  Then clear the error so the code can attempt to
-         * continue on.
-         */
-        printf("WARNING: Jep internal error. Python exception detected at start of process_java_exception():\n");
-        PyErr_Print();
-    }
-
-    // we're already processing this one, clear the old
+    printf("WARNING: SnakeJar internal error. process_java_exception() should never be called:\n");
+    (*env)->ExceptionDescribe(env);
     (*env)->ExceptionClear(env);
-
-    /*
-     * Java does not fill in a stack trace until getStackTrace() is called. If
-     * it is not called now then the stack trace can be lost so even though
-     * this looks like a no-op it is very important.
-     */
-    stack = java_lang_Throwable_getStackTrace(env, exception);
-    if ((*env)->ExceptionCheck(env)) {
-        PyErr_SetString(PyExc_RuntimeError,
-                        "wrapping java exception in pyjobject failed.");
-        return 1;
-
-    }
-    pyExceptionType = pyerrtype_from_throwable(env, exception);
-
-    jpyExc = jobject_As_PyObject(env, exception);
-    if (!jpyExc) {
-        return 1;
-    }
-
-    PyErr_SetObject(pyExceptionType, jpyExc);
-    Py_DECREF(jpyExc);
-    (*env)->DeleteLocalRef(env, stack);
-    (*env)->DeleteLocalRef(env, exception);
     return 1;
+
+//    if ((exception = (*env)->ExceptionOccurred(env)) == NULL) {
+//        return 0;
+//    }
+//
+//    if (PyErr_Occurred()) {
+//        /*
+//         * There's a bug in Jep somewhere, hopefully this printout will help
+//         * diagnose it.  Then clear the error so the code can attempt to
+//         * continue on.
+//         */
+//        printf("WARNING: Jep internal error. Python exception detected at start of process_java_exception():\n");
+//        PyErr_Print();
+//    }
+//
+//    // we're already processing this one, clear the old
+//    (*env)->ExceptionClear(env);
+//
+//    /*
+//     * Java does not fill in a stack trace until getStackTrace() is called. If
+//     * it is not called now then the stack trace can be lost so even though
+//     * this looks like a no-op it is very important.
+//     */
+//    stack = java_lang_Throwable_getStackTrace(env, exception);
+//    if ((*env)->ExceptionCheck(env)) {
+//        PyErr_SetString(PyExc_RuntimeError,
+//                        "wrapping java exception in pyjobject failed.");
+//        return 1;
+//
+//    }
+//    pyExceptionType = pyerrtype_from_throwable(env, exception);
+//
+//    jpyExc = jobject_As_PyObject(env, exception);
+//    if (!jpyExc) {
+//        return 1;
+//    }
+//
+//    PyErr_SetObject(pyExceptionType, jpyExc);
+//    Py_DECREF(jpyExc);
+//    (*env)->DeleteLocalRef(env, stack);
+//    (*env)->DeleteLocalRef(env, exception);
+//    return 1;
 }
 
 /*

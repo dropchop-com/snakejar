@@ -5,42 +5,42 @@ static PyObject* sj_jnumber_As_PyObject(JNIEnv *env, jobject jobj, jclass class)
   if ((*env)->IsSameObject(env, class, JBYTE_OBJ_TYPE)) {
     jbyte b = java_lang_Number_byteValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
-      process_java_exception(env);
+      THROW_JEP(env, "Unable to invoke java_lang_Number_byteValue!");
       return NULL;
     }
     return jbyte_As_PyObject(b);
   } else if ((*env)->IsSameObject(env, class, JSHORT_OBJ_TYPE)) {
     jshort s = java_lang_Number_shortValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
-      process_java_exception(env);
+      THROW_JEP(env, "Unable to invoke java_lang_Number_shortValue!");
       return NULL;
     }
     return jshort_As_PyObject(s);
   } else if ((*env)->IsSameObject(env, class, JINT_OBJ_TYPE)) {
     jint i = java_lang_Number_intValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
-      process_java_exception(env);
+      THROW_JEP(env, "Unable to invoke java_lang_Number_intValue!");
       return NULL;
     }
     return jint_As_PyObject(i);
   } else if ((*env)->IsSameObject(env, class, JLONG_OBJ_TYPE)) {
     jlong j = java_lang_Number_longValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
-      process_java_exception(env);
+      THROW_JEP(env, "Unable to invoke java_lang_Number_longValue!");
       return NULL;
     }
     return jlong_As_PyObject(j);
   } else if ((*env)->IsSameObject(env, class, JDOUBLE_OBJ_TYPE)) {
     jdouble d = java_lang_Number_doubleValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
-      process_java_exception(env);
+      THROW_JEP(env, "Unable to invoke java_lang_Number_doubleValue!");
       return NULL;
     }
     return jdouble_As_PyObject(d);
   } else if ((*env)->IsSameObject(env, class, JFLOAT_OBJ_TYPE)) {
     jfloat f = java_lang_Number_floatValue(env, jobj);
     if ((*env)->ExceptionCheck(env)) {
-      process_java_exception(env);
+      THROW_JEP(env, "Unable to invoke java_lang_Number_floatValue!");
       return NULL;
     }
     return jfloat_As_PyObject(f);
