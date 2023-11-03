@@ -7,19 +7,30 @@ docker build \
   --build-arg UID="$(id -u)" \
   --build-arg GID="$(id -g)" \
   -f src/main/docker/Dockerfile \
-  -t snakejar_build_20220825:latest .
+  -t ghcr.io/dropchop-com/snakejar/build:latest \
+  -t ghcr.io/dropchop-com/snakejar/build:20231103 .
 
-docker run -v "$(pwd)":/build/src snakejar_build_20220418 \
+docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
   /build/run_gradlew.sh "3.8" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"
 
-docker run -v "$(pwd)":/build/src snakejar_build_20220418 \
+docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
   /build/run_gradlew.sh "3.9" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"
 
-docker run -v "$(pwd)":/build/src snakejar_build_20220418 \
+docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
   /build/run_gradlew.sh "3.10" clean build --warning-mode all \
+    -Pgroup="${project_groupId}" \
+    -Pversion="${project_version}"
+
+docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
+  /build/run_gradlew.sh "3.11" clean build --warning-mode all \
+    -Pgroup="${project_groupId}" \
+    -Pversion="${project_version}"
+
+docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
+  /build/run_gradlew.sh "3.12" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"

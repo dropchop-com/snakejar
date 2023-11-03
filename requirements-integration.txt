@@ -1,4 +1,4 @@
 ufal.udpipe
-fasttext
+fasttext-wheel
 classla
 stanza
