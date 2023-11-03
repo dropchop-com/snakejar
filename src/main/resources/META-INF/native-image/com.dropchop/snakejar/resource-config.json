@@ -17,6 +17,12 @@
         "pattern": "\\Qlibsnakejar-linux-py3.10-x64.so\\E"
       },
       {
+        "pattern": "\\Qlibsnakejar-linux-py3.11-x64.so\\E"
+      },
+      {
+        "pattern": "\\Qlibsnakejar-linux-py3.12-x64.so\\E"
+      },
+      {
         "pattern": "\\Qsnakejar-win-py310-x64.dll\\E"
       }
     ]
