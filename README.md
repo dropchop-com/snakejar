@@ -35,7 +35,7 @@ namely for marshalling function arguments and unmarshalling results from Java to
 
 Of course, we also introduced numerous limitations, so we only support: 
 - Single usage paradigm (contrary to Jep with much richer usage patterns),
-- Python 3.8, 3.9 or 3.10 (if you use compiled code) on Linux,
+- Python 3.8, 3.9, 3.10, 3.11 or 3.12 (if you use compiled code) on Linux,
 - Python 3.10 (if you use compiled code) on Windows,
   
 Internal Python related notes:
@@ -79,7 +79,7 @@ Import from maven:
 <dependency>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.0.14</version>
+  <version>1.1.13</version>
 </dependency>
 ```
 
@@ -361,7 +361,7 @@ class LanguageDetect:
 
 ## Development
 
-You need Linux with Python 3.10, 3.9 or 3.8 installed. 
+You need Linux with Python 3.12, 3.11, 3.10, 3.9 or 3.8 installed. 
 
 Gradle wrapper script can be used for build, test and run.  
 First create Python virtual environment in *venv* folder.
