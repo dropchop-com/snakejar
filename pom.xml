@@ -10,6 +10,10 @@
     in Java Application Servers, targeting native Python Machine Learning frameworks and libraries.</description>
 
   <properties>
+    <source-plugin.version>3.3.0</source-plugin.version>
+    <javadoc-plugin.version>3.6.2</javadoc-plugin.version>
+    <gpg-plugin.version>3.1.0</gpg-plugin.version>
+
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.scm.id>github</project.scm.id>
@@ -76,7 +80,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>${gpg-plugin.version}</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -248,7 +252,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>${source-plugin.version}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -265,7 +269,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>${javadoc-plugin.version}</version>
         <configuration>
           <doclint>none</doclint>
         </configuration>
