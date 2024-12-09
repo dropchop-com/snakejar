@@ -3,12 +3,12 @@
 project_groupId=$1
 project_version=$2
 
-docker build \
+docker build --progress plain \
   --build-arg UID="$(id -u)" \
   --build-arg GID="$(id -g)" \
   -f src/main/docker/Dockerfile \
   -t ghcr.io/dropchop-com/snakejar/build:latest \
-  -t ghcr.io/dropchop-com/snakejar/build:20231103 .
+  -t ghcr.io/dropchop-com/snakejar/build:20241201 .
 
 docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
   /build/run_gradlew.sh "3.8" clean build --warning-mode all \
@@ -32,5 +32,10 @@ docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
 
 docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
   /build/run_gradlew.sh "3.12" clean build --warning-mode all \
+    -Pgroup="${project_groupId}" \
+    -Pversion="${project_version}"
+
+docker run -v "$(pwd)":/build/src ghcr.io/dropchop-com/snakejar/build:latest \
+  /build/run_gradlew.sh "3.13" clean build --warning-mode all \
     -Pgroup="${project_groupId}" \
     -Pversion="${project_version}"

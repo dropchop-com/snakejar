@@ -35,7 +35,7 @@ namely for marshalling function arguments and unmarshalling results from Java to
 
 Of course, we also introduced numerous limitations, so we only support: 
 - Single usage paradigm (contrary to Jep with much richer usage patterns),
-- Python 3.8, 3.9, 3.10, 3.11 or 3.12 (if you use compiled code) on Linux,
+- Python 3.8, 3.9, 3.10, 3.11, 3.12 or 3.13 (if you use compiled code) on Linux,
 - Python 3.10 (if you use compiled code) on Windows,
   
 Internal Python related notes:

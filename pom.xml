@@ -10,16 +10,16 @@
     in Java Application Servers, targeting native Python Machine Learning frameworks and libraries.</description>
 
   <properties>
-    <source-plugin.version>3.3.0</source-plugin.version>
-    <javadoc-plugin.version>3.6.2</javadoc-plugin.version>
-    <gpg-plugin.version>3.1.0</gpg-plugin.version>
+    <source-plugin.version>3.3.1</source-plugin.version>
+    <javadoc-plugin.version>3.6.3</javadoc-plugin.version>
+    <gpg-plugin.version>3.2.4</gpg-plugin.version>
 
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.scm.id>github</project.scm.id>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <version.slf4j>1.7.36</version.slf4j>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <slf4j.version>2.0.16</slf4j.version>
     <build.executable>./build.sh</build.executable>
   </properties>
 
@@ -114,7 +114,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
+      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
 
