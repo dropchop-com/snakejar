@@ -217,8 +217,8 @@ JNIEnv* sj_get_env(JavaVM *vm) {
 
 void sj_throw_error(JNIEnv *env, const char *restrict fmt, ...) {
   jclass ex_cls;
-  size_t buffer_len = 4096;
-  char buffer[4096];
+  size_t buffer_len = 102400;
+  char buffer[102400];
 
   if (!(ex_cls = (*env)->FindClass(env, CLS_NAME_EXCEPTION))) {
     sj_log_error(L"Could not find [%hs] class!", CLS_NAME_EXCEPTION);
