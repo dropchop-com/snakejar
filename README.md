@@ -79,7 +79,7 @@ Import from maven:
 <dependency>
   <groupId>com.dropchop</groupId>
   <artifactId>snakejar</artifactId>
-  <version>1.1.13</version>
+  <version>1.317.10</version>
 </dependency>
 ```
 
